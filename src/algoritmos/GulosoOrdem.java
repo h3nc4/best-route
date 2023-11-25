@@ -12,19 +12,31 @@ public class GulosoOrdem extends Guloso {
 
     /**
      * Construtor da classe GulosoOrdem
+     */
+    private GulosoOrdem() {
+        super();
+    }
+
+    /**
+     * Construtor da classe GulosoOrdem
      * 
      * @param rotas        vetor com as rotas a serem distribuídas
      * @param numCaminhoes número de caminhões disponíveis
      */
-    public GulosoOrdem(int[] rotas, int caminhoes) {
+    private GulosoOrdem(int[] rotas, int caminhoes) {
         super(rotas, caminhoes);
+    }
+
+    @Override
+    public void distribuirRotas(int[] rotas, int caminhoes) {
+        new GulosoOrdem(rotas, caminhoes).distribuirRotas();
     }
 
     /**
      * Primeira estratégia gulosa: ordernar em ordem crescente de quilometragem
      * e distribuir as rotas em ordem
      */
-    public void distribuirRotas() {
+    private void distribuirRotas() {
         int[] resultados = new int[this.caminhoes];
         List<Integer>[] rotasAdc = new LinkedList[this.caminhoes];
         for (int i = 0; i < this.caminhoes; i++)

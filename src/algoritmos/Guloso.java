@@ -10,11 +10,17 @@ public abstract class Guloso implements Distribuicao {
 
     /**
      * Construtor da classe Guloso
+     */
+    public Guloso() {
+    }
+
+    /**
+     * Construtor da classe Guloso
      * 
      * @param rotas        vetor com as rotas a serem distribuídas
      * @param numCaminhoes número de caminhões disponíveis
      */
-    public Guloso(int[] rotas, int caminhoes) {
+    Guloso(int[] rotas, int caminhoes) {
         this.rotas = Arrays.copyOf(rotas, rotas.length);
         Arrays.sort(this.rotas);
         this.caminhoes = caminhoes;

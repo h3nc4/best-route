@@ -26,11 +26,17 @@ public class Backtracking implements Distribuicao {
 
     /**
      * Construtor da classe Backtracking
+     */
+    public Backtracking() {
+    }
+
+    /**
+     * Construtor da classe Backtracking
      * 
      * @param rotas        vetor com as rotas a serem distribuídas
      * @param numCaminhoes número de caminhões disponíveis
      */
-    public Backtracking(int[] rotas, int numCaminhoes) {
+    private Backtracking(int[] rotas, int numCaminhoes) {
         this.rotas = Arrays.copyOf(rotas, rotas.length);
         Arrays.sort(this.rotas);
         this.caminhoes = numCaminhoes;
@@ -42,13 +48,9 @@ public class Backtracking implements Distribuicao {
         Arrays.fill(this.melhorDistrb, Integer.MAX_VALUE);
     }
 
-    /**
-     * Método que distribui as rotas entre os caminhões
-     * 
-     * @return instância da classe Backtracking
-     */
-    public void distribuirRotas() {
-        this.distribuir(0).print();
+    @Override
+    public void distribuirRotas(int[] rotas, int numCaminhoes) {
+        new Backtracking(rotas, numCaminhoes).distribuir(0).print();
     }
 
     /**

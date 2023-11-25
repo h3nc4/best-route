@@ -4,15 +4,15 @@ import algoritmos.*;
  * Classe principal do projeto, usada para realizar os múltiplos casos de teste
  */
 public class App {
-    private static void testar(int caminhoes, int inicio, int execucoes, long limiteTempo) {
+    private static void testar(Distribuicao algoritmo, int caminhoes, int inicio, int execucoes, long limiteTempo) {
         int conjunto = inicio;
         boolean lock = true;
         while (lock) {
             long tempoTotal = 0;
-                System.out.printf("%nTamanho %d: %n", conjunto);
+            System.out.printf("%nTamanho %d: %n", conjunto);
             for (int[] rotas : GeradorDeProblemas.geracaoDeRotas(conjunto, execucoes, 0.5)) {
                 long _inicio = System.currentTimeMillis();
-                new Backtracking(rotas, caminhoes).distribuirRotas();
+                algoritmo.distribuirRotas(rotas, caminhoes);
                 long tempoExecucao = System.currentTimeMillis() - _inicio;
                 tempoTotal += tempoExecucao;
                 if (tempoExecucao > limiteTempo) {
@@ -35,6 +35,8 @@ public class App {
     }
 
     public static void main(String[] args) {
-        testar(3, 6, 10, 30 * 1000);
+        // testar(new Backtracking(), 3, 6, 10, 30 * 1000);
+
+        // testar(new GulosoOrdem(), 3, 6, 10, 30 * 1000);
     }
 }

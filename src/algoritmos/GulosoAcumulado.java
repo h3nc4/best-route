@@ -9,11 +9,18 @@ public class GulosoAcumulado extends Guloso {
 
     /**
      * Construtor da classe GulosoAcumulado
+     */
+    private GulosoAcumulado() {
+        super();
+    }
+
+    /**
+     * Construtor da classe GulosoAcumulado
      * 
      * @param rotas        vetor com as rotas a serem distribuídas
      * @param numCaminhoes número de caminhões disponíveis
      */
-    public GulosoAcumulado(int[] rotas, int caminhoes) {
+    private GulosoAcumulado(int[] rotas, int caminhoes) {
         super(rotas, caminhoes);
     }
 
@@ -37,11 +44,16 @@ public class GulosoAcumulado extends Guloso {
         }
     }
 
+    @Override
+    public void distribuirRotas(int[] rotas, int caminhoes) {
+        new GulosoAcumulado(rotas, caminhoes).distribuirRotas();
+    }
+
     /**
      * Segunda estratégia gulosa: alocar para o caminhão com menor quilometragem
      * acumulada
      */
-    public void distribuirRotas() {
+    private void distribuirRotas() {
         PriorityQueue<Caminhao> fila = new PriorityQueue<>(this.caminhoes,
                 (a, b) -> Integer.compare(a.acumulado, b.acumulado));
         List<Integer>[] rotasAdc = new LinkedList[this.caminhoes];
