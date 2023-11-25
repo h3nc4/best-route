@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
  * Classe que implementa o algoritmo de Backtracking para distribuição de rotas
  * entre caminhões
  */
-public class Backtracking {
+public class Backtracking implements Distribuicao {
     /** Array com as rotas a serem distribuídas */
     private int[] rotas;
     /** Lista com as rotas distribuídas */
