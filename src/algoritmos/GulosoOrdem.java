@@ -3,6 +3,7 @@ package algoritmos;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * Classe que implementa o algoritmo guloso para distribuição de rotas entre
@@ -13,7 +14,7 @@ public class GulosoOrdem extends Guloso {
     /**
      * Construtor da classe GulosoOrdem
      */
-    private GulosoOrdem() {
+    public GulosoOrdem() {
         super();
     }
 
@@ -38,7 +39,9 @@ public class GulosoOrdem extends Guloso {
      */
     private void distribuirRotas() {
         int[] resultados = new int[this.caminhoes];
-        List<Integer>[] rotasAdc = new LinkedList[this.caminhoes];
+        List<Integer>[] rotasAdc = IntStream.range(0, this.caminhoes)
+                .mapToObj(i -> new LinkedList<Integer>())
+                .toArray(List[]::new);
         for (int i = 0; i < this.caminhoes; i++)
             rotasAdc[i] = new LinkedList<>();
         for (int i = 0; i < this.rotas.length; i++) {

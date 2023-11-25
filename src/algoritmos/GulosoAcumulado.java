@@ -4,13 +4,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class GulosoAcumulado extends Guloso {
 
     /**
      * Construtor da classe GulosoAcumulado
      */
-    private GulosoAcumulado() {
+    public GulosoAcumulado() {
         super();
     }
 
@@ -56,7 +57,9 @@ public class GulosoAcumulado extends Guloso {
     private void distribuirRotas() {
         PriorityQueue<Caminhao> fila = new PriorityQueue<>(this.caminhoes,
                 (a, b) -> Integer.compare(a.acumulado, b.acumulado));
-        List<Integer>[] rotasAdc = new LinkedList[this.caminhoes];
+        List<Integer>[] rotasAdc = IntStream.range(0, this.caminhoes)
+                .mapToObj(i -> new LinkedList<Integer>())
+                .toArray(List[]::new);
         for (int i = 0; i < this.caminhoes; i++) {
             rotasAdc[i] = new LinkedList<>();
             fila.add(new Caminhao(i + 1));
@@ -69,7 +72,6 @@ public class GulosoAcumulado extends Guloso {
         }
         print(new PriorityQueue<>(fila), rotasAdc);
     }
-    
 
     /**
      * Método que imprime os resultados da segunda estratégia
