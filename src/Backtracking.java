@@ -12,7 +12,7 @@ public class Backtracking {
     /** Array com as rotas a serem distribuídas */
     private int[] rotas;
     /** Lista com as rotas distribuídas */
-    private List<List<Integer>> atualRotas;
+    private LinkedList<LinkedList<Integer>> atualRotas; // LinkedList para acesso a removeFirstOccurrence
     /** Lista com as melhores rotas distribuídas */
     private List<List<Integer>> melhorRotas;
     /** Número de caminhões disponíveis */
@@ -29,7 +29,8 @@ public class Backtracking {
      * @param numCaminhoes número de caminhões disponíveis
      */
     public Backtracking(int[] rotas, int numCaminhoes) {
-        this.rotas = rotas;
+        this.rotas = Arrays.copyOf(rotas, rotas.length);
+        Arrays.sort(this.rotas);
         this.caminhoes = numCaminhoes;
         this.atualRotas = new LinkedList<>();
         for (int i = 0; i < numCaminhoes; i++)
@@ -65,11 +66,11 @@ public class Backtracking {
         }
 
         for (int i = 0; i < this.caminhoes; i++) {
-            List<Integer> caminhao = this.atualRotas.get(i);
+            LinkedList<Integer> caminhao = this.atualRotas.get(i);
             caminhao.add(this.rotas[q]);
             this.distbAtual[i] += this.rotas[q];
             this.distribuir(q + 1);
-            caminhao.removeIf(rota -> rota == this.rotas[q]);
+            caminhao.removeFirstOccurrence(this.rotas[q]);
             this.distbAtual[i] -= this.rotas[q];
         }
         return this;
