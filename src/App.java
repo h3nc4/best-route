@@ -1,3 +1,5 @@
+import algoritmos.*;
+
 /**
  * Classe principal do projeto, usada para realizar os múltiplos casos de teste
  */
