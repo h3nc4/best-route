@@ -12,7 +12,7 @@ public class App {
                 System.out.printf("%nTamanho %d: %n", conjunto);
             for (int[] rotas : GeradorDeProblemas.geracaoDeRotas(conjunto, execucoes, 0.5)) {
                 long _inicio = System.currentTimeMillis();
-                new Backtracking(rotas, caminhoes).distribuirRotas().print();
+                new Backtracking(rotas, caminhoes).distribuirRotas();
                 long tempoExecucao = System.currentTimeMillis() - _inicio;
                 tempoTotal += tempoExecucao;
                 if (tempoExecucao > limiteTempo) {

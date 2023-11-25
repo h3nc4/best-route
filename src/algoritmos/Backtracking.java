@@ -1,4 +1,5 @@
 package algoritmos;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -13,9 +14,9 @@ public class Backtracking {
     /** Array com as rotas a serem distribuídas */
     private int[] rotas;
     /** Lista com as rotas distribuídas */
-    private LinkedList<LinkedList<Integer>> atualRotas; // LinkedList para acesso a removeFirstOccurrence
+    private LinkedList<Integer>[] atualRotas; // LinkedList para acesso a removeFirstOccurrence
     /** Lista com as melhores rotas distribuídas */
-    private List<List<Integer>> melhorRotas;
+    private List<List<Integer>> melhorRotas; // Usa arraylist para acesso veloz durante a impressão e cópia
     /** Número de caminhões disponíveis */
     private int caminhoes;
     /** Array com as distâncias atuais */
@@ -33,9 +34,10 @@ public class Backtracking {
         this.rotas = Arrays.copyOf(rotas, rotas.length);
         Arrays.sort(this.rotas);
         this.caminhoes = numCaminhoes;
-        this.atualRotas = new LinkedList<>();
-        for (int i = 0; i < numCaminhoes; i++)
-            this.atualRotas.add(new LinkedList<>());
+        this.atualRotas = new LinkedList[numCaminhoes];
+        for (int i = 0; i < numCaminhoes; i++) {
+            this.atualRotas[i] = new LinkedList<>();
+        }
         this.distbAtual = new int[numCaminhoes];
         this.melhorDistrb = new int[numCaminhoes];
         Arrays.fill(this.melhorDistrb, Integer.MAX_VALUE);
@@ -46,8 +48,8 @@ public class Backtracking {
      * 
      * @return instância da classe Backtracking
      */
-    public Backtracking distribuirRotas() {
-        return this.distribuir(0);
+    public void distribuirRotas() {
+        this.distribuir(0).print();
     }
 
     /**
@@ -61,13 +63,13 @@ public class Backtracking {
         if (q == this.rotas.length) {
             if (Arrays.stream(this.distbAtual).max().getAsInt() < Arrays.stream(this.melhorDistrb).max().getAsInt()) {
                 System.arraycopy(this.distbAtual, 0, this.melhorDistrb, 0, this.caminhoes);
-                melhorRotas = atualRotas.stream().map(ArrayList::new).collect(Collectors.toList());
+                melhorRotas = Arrays.stream(atualRotas).map(ArrayList::new).collect(Collectors.toList());
             }
             return this;
         }
 
         for (int i = 0; i < this.caminhoes; i++) {
-            LinkedList<Integer> caminhao = this.atualRotas.get(i);
+            LinkedList<Integer> caminhao = this.atualRotas[i];
             caminhao.add(this.rotas[q]);
             this.distbAtual[i] += this.rotas[q];
             this.distribuir(q + 1);
