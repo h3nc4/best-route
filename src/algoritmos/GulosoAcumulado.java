@@ -1,0 +1,76 @@
+package algoritmos;
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.PriorityQueue;
+import java.util.stream.Collectors;
+
+public class GulosoAcumulado extends Guloso {
+
+    /**
+     * Construtor da classe GulosoAcumulado
+     * 
+     * @param rotas        vetor com as rotas a serem distribuídas
+     * @param numCaminhoes número de caminhões disponíveis
+     */
+    public GulosoAcumulado(int[] rotas, int caminhoes) {
+        super(rotas, caminhoes);
+    }
+
+    /**
+     * Classe auxiliar para a segunda estratégia gulosa
+     */
+    private static class Caminhao {
+        /** Index do caminhão */
+        private int numero;
+        /** Quilometragem acumulada */
+        private int acumulado;
+
+        /**
+         * Construtor da classe Caminhao
+         * 
+         * @param numero index do caminhão
+         */
+        private Caminhao(int numero) {
+            this.numero = numero;
+            this.acumulado = 0;
+        }
+    }
+
+    /**
+     * Segunda estratégia gulosa: alocar para o caminhão com menor quilometragem
+     * acumulada
+     */
+    public void distribuirRotas() {
+        PriorityQueue<Caminhao> fila = new PriorityQueue<>(this.caminhoes,
+                (a, b) -> Integer.compare(a.acumulado, b.acumulado));
+        List<Integer>[] rotasAdc = new LinkedList[this.caminhoes];
+        for (int i = 0; i < this.caminhoes; i++) {
+            rotasAdc[i] = new LinkedList<>();
+            fila.add(new Caminhao(i + 1));
+        }
+        for (int i = this.rotas.length - 1; i >= 0; i--) {
+            Caminhao caminhao = fila.poll();
+            caminhao.acumulado += this.rotas[i];
+            fila.add(caminhao);
+            rotasAdc[caminhao.numero - 1].add(this.rotas[i]);
+        }
+        print(new PriorityQueue<>(fila), rotasAdc);
+    }
+    
+
+    /**
+     * Método que imprime os resultados da segunda estratégia
+     * 
+     * @param fila fila de prioridade com os caminhões
+     */
+    private void print(PriorityQueue<Caminhao> fila, List<Integer>[] rotas) {
+        while (!fila.isEmpty()) {
+            Caminhao caminhao = fila.poll();
+            System.out.printf("Caminhão %d: rotas %s - total %dkm%n", caminhao.numero,
+                    rotas[caminhao.numero - 1].stream().map(Object::toString).collect(Collectors.joining(", ")),
+                    caminhao.acumulado //
+            );
+        }
+    }
+}
