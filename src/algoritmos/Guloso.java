@@ -2,6 +2,10 @@ package algoritmos;
 
 import java.util.Arrays;
 
+/**
+ * Classe abstrata que implementa a interface Distribuicao e serve de base para
+ * implementar a estratégia gulosa
+ */
 public abstract class Guloso implements Distribuicao {
     /** Array com as rotas a serem distribuídas */
     int[] rotas;
