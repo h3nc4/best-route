@@ -50,7 +50,7 @@ public class Backtracking implements Distribuicao {
 
     @Override
     public void distribuirRotas(int[] rotas, int numCaminhoes) {
-        new Backtracking(rotas, numCaminhoes).distribuir(0).print();
+        new Backtracking(rotas, numCaminhoes).distribuir(0); // .print();
     }
 
     /**

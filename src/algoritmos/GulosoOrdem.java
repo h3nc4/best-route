@@ -7,7 +7,7 @@ import java.util.stream.IntStream;
 
 /**
  * Classe que implementa o algoritmo guloso para distribuição de rotas entre
- * caminhões
+ * caminhões com base na ordem das rotas
  */
 public class GulosoOrdem extends Guloso {
 
@@ -48,7 +48,7 @@ public class GulosoOrdem extends Guloso {
             resultados[i % this.caminhoes] += this.rotas[i];
             rotasAdc[i % this.caminhoes].add(this.rotas[i]);
         }
-        print(resultados, rotasAdc);
+        // print(resultados, rotasAdc);
     }
 
     /**

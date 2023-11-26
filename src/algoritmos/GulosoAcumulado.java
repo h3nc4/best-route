@@ -6,6 +6,10 @@ import java.util.PriorityQueue;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+/**
+ * Classe que implementa a segunda estratégia gulosa para distribuição de rotas
+ * entre caminhões com base na quilometragem acumulada
+ */
 public class GulosoAcumulado extends Guloso {
 
     /**
@@ -70,7 +74,7 @@ public class GulosoAcumulado extends Guloso {
             fila.add(caminhao);
             rotasAdc[caminhao.numero - 1].add(this.rotas[i]);
         }
-        print(new PriorityQueue<>(fila), rotasAdc);
+        // print(new PriorityQueue<>(fila), rotasAdc);
     }
 
     /**
@@ -78,7 +82,7 @@ public class GulosoAcumulado extends Guloso {
      * 
      * @param fila fila de prioridade com os caminhões
      */
-    private void print(PriorityQueue<Caminhao> fila, List<Integer>[] rotas) {
+    private static void print(PriorityQueue<Caminhao> fila, List<Integer>[] rotas) {
         while (!fila.isEmpty()) {
             Caminhao caminhao = fila.poll();
             System.out.printf("Caminhão %d: rotas %s - total %dkm%n", caminhao.numero,
