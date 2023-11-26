@@ -9,7 +9,7 @@ public class App {
         boolean lock = true;
         while (lock) {
             long tempoTotal = 0;
-            System.out.printf("%nTamanho %d: %n", conjunto);
+            // System.out.printf("%nTamanho %d: %n", conjunto);
             for (int[] rotas : GeradorDeProblemas.geracaoDeRotas(conjunto, execucoes, 0.5)) {
                 long _inicio = System.currentTimeMillis();
                 algoritmo.distribuirRotas(rotas, caminhoes);
@@ -24,7 +24,7 @@ public class App {
 
             long mediaTempo = tempoTotal / execucoes;
             System.out.printf("%nTamanho %d - Tempo Médio: %d ms%n", conjunto, mediaTempo);
-            System.out.println("--------------------------------------------------");
+            // System.out.println("--------------------------------------------------");
             if (mediaTempo > limiteTempo) {
                 System.out.printf("%nTamanho %d ultrapassou o limite de tempo.%n", conjunto);
                 lock = false;
@@ -38,5 +38,9 @@ public class App {
         // testar(new Backtracking(), 3, 6, 10, 30 * 1000);
 
         // testar(new GulosoOrdem(), 3, 6, 10, 30 * 1000);
+
+        // testar(new GulosoAcumulado(), 3, 6, 10, 30 * 1000);
+
+        // testar(new DivisaoConquista(), 3, 6, 10, 30 * 1000);
     }
 }
