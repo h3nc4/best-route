@@ -35,7 +35,8 @@ public class GulosoOrdem extends Guloso {
 
     /**
      * Primeira estratégia gulosa: ordernar em ordem crescente de quilometragem
-     * e distribuir as rotas em ordem
+     * e distribuir as rotas em ordem para os caminhões
+     * Ao adicionar uma rota para cada caminhão, a ordem da distribuição é invertida
      */
     private void distribuirRotas() {
         int[] resultados = new int[this.caminhoes];
@@ -44,11 +45,19 @@ public class GulosoOrdem extends Guloso {
                 .toArray(List[]::new);
         for (int i = 0; i < this.caminhoes; i++)
             rotasAdc[i] = new LinkedList<>();
+        boolean ordem = true;
         for (int i = 0; i < this.rotas.length; i++) {
-            resultados[i % this.caminhoes] += this.rotas[i];
-            rotasAdc[i % this.caminhoes].add(this.rotas[i]);
+            if (ordem) {
+                resultados[i % this.caminhoes] += this.rotas[i];
+                rotasAdc[i % this.caminhoes].add(this.rotas[i]);
+            } else {
+                resultados[(this.caminhoes - 1) - (i % this.caminhoes)] += this.rotas[i];
+                rotasAdc[(this.caminhoes - 1) - (i % this.caminhoes)].add(this.rotas[i]);
+            }
+            if ((i + 1) % this.caminhoes == 0)
+                ordem = !ordem;
         }
-        // print(resultados, rotasAdc);
+        // this.print(resultados, rotasAdc);
     }
 
     /**
