@@ -1,58 +1,30 @@
 package algoritmos;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Classe que implementa o algoritmo de programação dinâmica para distribuição
- * de rotas entre caminhões, colunas são os caminhões, linhas são as rotas e
- * células são
+ * de rotas entre caminhões, colunas representam a quilometrágem média esperada
+ * de cada caminhão (um por um), linhas são as rotas a serem adicionadas e
+ * células são verdadeiras se a rota pode ser adicionada ao caminhão e falsas
+ * caso contrário. Caso o valor chegue a ser verdadeiro na célula
+ * T[<x>][<valor_aceitavel>], então as rotas verdadeiras são retiradas de T,
+ * adicionadas a um caminhão e o processo é repetido até que todas as rotas
+ * sejam distribuídas. Caso o valor chegue a ser falso na célula
+ * T[<x>][<valor_aceitavel>], então ele será adicionado ao caminhão
+ * com menor quilometragem média.
  */
 public class ProgDinamica implements Distribuicao {
-    /**
-     * Classe auxiliar para a programação dinâmica
-     */
-    private static class Frota {
-        /** Array com as rotas de cada caminhão */
-        private int[] rotas;
-
-        /**
-         * Construtor da classe Frota
-         */
-        private Frota() {
-            this.rotas = new int[0];
-        }
-
-        /**
-         * Construtor da classe Frota, copia o array de rotas e adiciona um novo
-         * caminhão
-         * 
-         * @param rotas array com as rotas de cada caminhão
-         */
-        private Frota(int[] rotas) {
-            this.rotas = Arrays.copyOf(rotas, rotas.length + 1);
-        }
-
-        /**
-         * Adiciona uma rota para o caminhão com menor quilometragem
-         * 
-         * @param rota quilometragem da rota a ser adicionada
-         */
-        private void add(int rota) {
-            this.rotas[Arrays.stream(this.rotas).min().getAsInt()] += rota;
-        }
-
-        @Override
-        public String toString() {
-            return Arrays.toString(rotas);
-        }
-    }
-
+    /** Quilometragem média aceitável */
+    private int aceitavel;
     /** Array com as rotas a serem distribuídas */
     private int[] rotas;
-    /** Número de caminhões disponíveis */
-    private int caminhoes;
+    /** Caminhões que já foram distribuídos */
+    private int[][] caminhoesDistribuidos;
     /** Tabela de soluções */
-    private Frota[][] T;
+    private boolean[][] T;
 
     /**
      * Construtor da classe ProgDinamica
@@ -69,12 +41,10 @@ public class ProgDinamica implements Distribuicao {
     private ProgDinamica(int[] rotas, int numCaminhoes) {
         this.rotas = Arrays.copyOf(rotas, rotas.length);
         Arrays.sort(this.rotas);
-        this.caminhoes = numCaminhoes;
-        this.T = new Frota[numCaminhoes + 1][rotas.length + 1];
-        for (int i = 0; i <= numCaminhoes; i++)
-            this.T[i][0] = new Frota();
-        for (int i = 0; i <= rotas.length; i++)
-            this.T[0][i] = new Frota();
+        this.caminhoesDistribuidos = new int[numCaminhoes][];
+        int aceitavel = Arrays.stream(this.rotas).sum() / numCaminhoes;
+        this.T = new boolean[this.rotas.length + 1][aceitavel + (int) (aceitavel * 0.1) + 1];
+        this.aceitavel = aceitavel - (int) (aceitavel * 0.1);
     }
 
     @Override
@@ -83,22 +53,56 @@ public class ProgDinamica implements Distribuicao {
     }
 
     /**
-     * Resolve o problema da distribuição de rotas
+     * Distribui as rotas entre os caminhões
      * 
      * @return A própria instância da classe
      */
     private ProgDinamica distribuir() {
-        for (int i = 1; i <= caminhoes; i++)
-            for (int j = 1; j <= rotas.length; j++)
-                // TODO
-                return this;
+
+    }
+
+    /**
+     * Resolve o problema da distribuição de rotas
+     * 
+     * @return A própria instância da classe
+     */
+    private int[] distribuirAtual() {
+        // Inicializa a primeira linha da tabela
+        for (int j = 0; j < T[0].length; j++)
+            T[0][j] = true;
+        // Inicializa a primeira coluna da tabela
+        for (int i = 1; i < T.length; i++)
+            T[i][0] = false;
+        // Preenche a tabela atual
+        for (int i = 1; i < T.length; i++)
+            for (int j = 1; j < T[i].length; j++) {
+                // Se o valor acima for verdadeiro
+                T[i][j] = T[i - 1][j] ||
+                // Se a célula *rotas* à esquerda for verdadeira, quer dizer que a rota
+                // atual pode ser adicionada ao caminhão para preencher o valor atual
+                        j >= this.rotas[i - 1] && T[i - 1][j - this.rotas[i - 1]];
+
+                // Verificar se o valor atual é verdadeiro e se está em uma coluna aceitável
+                if (T[i][j]) {
+                    
+                }
+            }
+
+        // Coletar as rotas que foram distribuídas em um array
+        return Arrays.stream(this.rotas).filter(rota -> T[this.rotas.length][rota]).toArray();
     }
 
     /**
      * Imprime a melhor distribuição de rotas
      */
     public void print() {
-        System.out.println("Melhor distribuição: " + T[caminhoes][rotas.length]);
+        System.out.println("Distribuição de rotas:");
+        for (int i = 0; i < this.caminhoesDistribuidos.length; i++) {
+            System.out.printf("Caminhão %d: ", i + 1);
+            for (int j = 0; j < this.caminhoesDistribuidos[i].length; j++)
+                System.out.printf("%d ", this.caminhoesDistribuidos[i][j]);
+            System.out.println();
+        }
     }
 
     public static void main(String[] args) {
