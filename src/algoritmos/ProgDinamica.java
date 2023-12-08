@@ -1,7 +1,7 @@
 package algoritmos;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -17,8 +17,6 @@ import java.util.List;
  * com menor quilometragem média.
  */
 public class ProgDinamica implements Distribuicao {
-    /** Quilometragem média aceitável */
-    private int aceitavel;
     /** Array com as rotas a serem distribuídas */
     private int[] rotas;
     /** Caminhões que já foram distribuídos */
@@ -44,7 +42,6 @@ public class ProgDinamica implements Distribuicao {
         this.caminhoesDistribuidos = new int[numCaminhoes][];
         int aceitavel = Arrays.stream(this.rotas).sum() / numCaminhoes;
         this.T = new boolean[this.rotas.length + 1][aceitavel + (int) (aceitavel * 0.1) + 1];
-        this.aceitavel = aceitavel - (int) (aceitavel * 0.1);
     }
 
     @Override
@@ -68,28 +65,49 @@ public class ProgDinamica implements Distribuicao {
      */
     private int[] distribuirAtual() {
         // Inicializa a primeira linha da tabela
-        for (int j = 0; j < T[0].length; j++)
-            T[0][j] = true;
+        for (int j = 0; j < this.T[0].length; j++)
+            this.T[0][j] = true;
         // Inicializa a primeira coluna da tabela
-        for (int i = 1; i < T.length; i++)
-            T[i][0] = false;
+        for (int i = 1; i < this.T.length; i++)
+            this.T[i][0] = false;
         // Preenche a tabela atual
-        for (int i = 1; i < T.length; i++)
-            for (int j = 1; j < T[i].length; j++) {
+        for (int i = 1; i < this.T.length; i++)
+            for (int j = 1; j < this.T[i].length; j++) {
                 // Se o valor acima for verdadeiro
-                T[i][j] = T[i - 1][j] ||
+                this.T[i][j] = this.T[i - 1][j] ||
                 // Se a célula *rotas* à esquerda for verdadeira, quer dizer que a rota
                 // atual pode ser adicionada ao caminhão para preencher o valor atual
-                        j >= this.rotas[i - 1] && T[i - 1][j - this.rotas[i - 1]];
-
-                // Verificar se o valor atual é verdadeiro e se está em uma coluna aceitável
-                if (T[i][j]) {
-                    
-                }
+                        j >= this.rotas[i - 1] && this.T[i - 1][j - this.rotas[i - 1]];
             }
 
-        // Coletar as rotas que foram distribuídas em um array
-        return Arrays.stream(this.rotas).filter(rota -> T[this.rotas.length][rota]).toArray();
+        // Retornar as rotas distribuídas
+        return this.coletar();
+    }
+
+    /**
+     * Coleta as rotas distribuídas
+     * 
+     * @return Array com as rotas para um caminhão
+     */
+    private int[] coletar() {
+        int i = this.T[0].length - 1; // Última coluna
+        // verificar se a última célula da tabela é verdadeira, se não for, então
+        // decrementar o valor de i até que seja verdadeira
+        while (!this.T[this.T.length - 1][i])
+            i--;
+
+        // Encontrado o valor de i, então coletar as rotas que foram distribuídas
+        List<Integer> rotasDistribuidas = new LinkedList<>();
+        for (int j = this.T.length - 1; j > 0; j--)
+            // Se a célula atual for verdadeira e a célula acima for falsa, então a rota
+            // atual foi distribuída e assim subtrair o valor da rota atual de i
+            if (this.T[j][i] && !this.T[j - 1][i]) {
+                rotasDistribuidas.add(this.rotas[j - 1]);
+                i -= this.rotas[j - 1];
+            }
+
+        // Retornar as rotas distribuídas em um array
+        return rotasDistribuidas.stream().mapToInt(Integer::intValue).toArray();
     }
 
     /**
