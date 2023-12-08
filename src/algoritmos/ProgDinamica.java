@@ -3,6 +3,7 @@ package algoritmos;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 /**
  * Classe que implementa o algoritmo de programação dinâmica para distribuição
@@ -18,7 +19,7 @@ public class ProgDinamica implements Distribuicao {
     /** Array com as rotas a serem distribuídas */
     private int[] rotas;
     /** Caminhões que já foram distribuídos */
-    private int[][] caminhoesDistribuidos;
+    private List<Integer>[] caminhoesDistribuidos;
     /** Tabela de soluções */
     private boolean[][] T;
 
@@ -37,7 +38,7 @@ public class ProgDinamica implements Distribuicao {
     private ProgDinamica(int[] rotas, int numCaminhoes) {
         this.rotas = Arrays.copyOf(rotas, rotas.length);
         Arrays.sort(this.rotas);
-        this.caminhoesDistribuidos = new int[numCaminhoes][];
+        this.caminhoesDistribuidos = new LinkedList[numCaminhoes];
         int aceitavel = Arrays.stream(this.rotas).sum() / numCaminhoes;
         this.T = new boolean[this.rotas.length + 1][aceitavel + (int) (aceitavel * 0.1) + 1];
     }
@@ -60,12 +61,12 @@ public class ProgDinamica implements Distribuicao {
     private ProgDinamica distribuir() {
         for (int i = 0; i < this.caminhoesDistribuidos.length; i++) {
             // Distribuir as rotas
-            int[] rotasDistribuidas = this.distribuirAtual();
+            List<Integer> rotasDistribuidas = this.distribuirAtual();
             // Adicionar as rotas distribuídas ao array de caminhões distribuídos
             this.caminhoesDistribuidos[i] = rotasDistribuidas;
             // Criar um novo array de rotas com as rotas que não foram distribuídas
-            this.rotas = Arrays.stream(this.rotas)
-                    .filter(r -> Arrays.stream(rotasDistribuidas).noneMatch(r2 -> r2 == r))
+            this.rotas = IntStream.of(this.rotas)
+                    .filter(r -> rotasDistribuidas.stream().noneMatch(r2 -> r2 == r))
                     .toArray();
             // Criar uma nova tabela de soluções
             if (this.caminhoesDistribuidos.length - i - 1 != 0) {
@@ -73,6 +74,8 @@ public class ProgDinamica implements Distribuicao {
                 this.T = new boolean[this.rotas.length + 1][aceitavel + (int) (aceitavel * 0.1) + 1];
             }
         }
+        if (this.rotas.length != 0)
+            this.guloso();
         return this;
     }
 
@@ -81,14 +84,13 @@ public class ProgDinamica implements Distribuicao {
      * 
      * @return A própria instância da classe
      */
-    private int[] distribuirAtual() {
+    private List<Integer> distribuirAtual() {
         // Inicializa a primeira linha da tabela
         for (int j = 1; j < this.T[0].length; j++)
             this.T[1][j] = false;
         // Inicializa a primeira coluna da tabela
         for (int i = 0; i < this.T.length; i++)
             this.T[i][0] = true;
-        this.printarTabela();
         // Preenche a tabela atual
         for (int i = 1; i < this.T.length; i++)
             for (int j = 1; j < this.T[i].length; j++) {
@@ -99,8 +101,6 @@ public class ProgDinamica implements Distribuicao {
                         j >= this.rotas[i - 1] && this.T[i - 1][j - this.rotas[i - 1]];
             }
 
-        this.printarTabela();
-
         // Retornar as rotas distribuídas
         return this.coletar();
     }
@@ -110,7 +110,7 @@ public class ProgDinamica implements Distribuicao {
      * 
      * @return Array com as rotas para um caminhão
      */
-    private int[] coletar() {
+    private List<Integer> coletar() {
         int i = this.T[0].length - 1; // Última coluna
         // verificar se a última célula da tabela é verdadeira, se não for, então
         // decrementar o valor de i até que seja verdadeira
@@ -128,7 +128,7 @@ public class ProgDinamica implements Distribuicao {
             }
 
         // Retornar as rotas distribuídas em um array
-        return rotasDistribuidas.stream().mapToInt(Integer::intValue).toArray();
+        return rotasDistribuidas;
     }
 
     /**
@@ -147,20 +147,45 @@ public class ProgDinamica implements Distribuicao {
     }
 
     /**
-     * Imprime a melhor distribuição de rotas
+     * Imprime a melhor distribuição de rotas e a rota total de cada caminhão
      */
     public void print() {
-        System.out.println("Distribuição de rotas:");
+        System.out.println();
+        System.out.println("Quilometragem total:");
         for (int i = 0; i < this.caminhoesDistribuidos.length; i++) {
             System.out.printf("Caminhão %d: ", i + 1);
-            for (int j = 0; j < this.caminhoesDistribuidos[i].length; j++)
-                System.out.printf("%d ", this.caminhoesDistribuidos[i][j]);
-            System.out.println();
+            for (int j = 0; j < this.caminhoesDistribuidos[i].size(); j++)
+                System.out.printf("%d ", this.caminhoesDistribuidos[i].get(j));
+            System.out.printf("%nTotal: %d km%n",
+                    this.caminhoesDistribuidos[i].stream().mapToInt(Integer::intValue).sum());
         }
     }
 
+    /**
+     * Função gulosa para distribuir as rotas restantes
+     */
+    private void guloso() {
+        for (int i = 0; i < this.rotas.length; i++)
+            this.caminhoesDistribuidos[this.menorAcumulado()].add(this.rotas[i]);
+    }
+
+    /**
+     * Retorna o caminhão com menor quilometragem acumulada para a função gulosa
+     * 
+     * @return Index do caminhão com menor quilometragem acumulada
+     */
+    private int menorAcumulado() {
+        int menor = 0;
+        for (int i = 1; i < this.caminhoesDistribuidos.length; i++)
+            if (this.caminhoesDistribuidos[i].stream().mapToInt(Integer::intValue)
+                    .sum() < this.caminhoesDistribuidos[menor].stream().mapToInt(Integer::intValue)
+                            .sum())
+                menor = i;
+        return menor;
+    }
+
     public static void main(String[] args) {
-        int[] rotas = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+        int[] rotas = { 35, 34, 33, 23, 21, 32, 35, 19, 26, 42 };
         int caminhoes = 3;
         new ProgDinamica().distribuirRotas(rotas, caminhoes);
     }
