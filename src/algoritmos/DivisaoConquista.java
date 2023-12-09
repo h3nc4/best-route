@@ -76,13 +76,14 @@ public class DivisaoConquista implements Distribuicao {
             return true;
         if (n == 0) // Se não há mais rotas para distribuir
             return false;
-        // Inclui ou não o último elemento caso ele esteja dentro do alcance
-        if (rotas[n - 1] >= min && rotas[n - 1] <= max && distribuirAtual(n - 1, min, max, i))
-            return true;
-        else if (distribuirAtual(n - 1, min - rotas[n - 1], max - rotas[n - 1], i)) {
-            this.caminhoesDistribuidos[i].add(rotas[n - 1]);
-            return true;
-        }
+        // Inclui ou não o último elemento caso sua inclusão não exceda os limites
+        if (rotas[n - 1] <= max)
+            if (distribuirAtual(n - 1, min, max, i))
+                return true;
+            else if (distribuirAtual(n - 1, min - rotas[n - 1], max - rotas[n - 1], i)) {
+                this.caminhoesDistribuidos[i].add(rotas[n - 1]);
+                return true;
+            }
         // Caso contrário, continue verificando sem incluí-lo
         return distribuirAtual(n - 1, min, max, i);
     }

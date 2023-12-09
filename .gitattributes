@@ -1,1 +1,4 @@
 *.java eol=lf
+*.MF eol=lf
+*.ms eol=lf
+*.sh eol=lf
