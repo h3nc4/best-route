@@ -20,6 +20,8 @@
 
 package app;
 
+import java.util.List;
+
 import algoritmos.*;
 
 /**
@@ -28,6 +30,8 @@ import algoritmos.*;
 public class App {
     /** Algoritmos a serem testados */
     private Distribuicao[] alg;
+    /** Algoritmo atual */
+    private int algoritmo;
     /** Número de caminhões */
     private int caminhoes;
     /** Tamanho dos conjuntos de rotas */
@@ -36,6 +40,8 @@ public class App {
     private int execucoes;
     /** Limite de tempo para a execução */
     private long limite;
+    /** Conjunto que alcançou o tamanho T */
+    private List<int[]> T;
 
     /**
      * Construtor da classe App
@@ -48,6 +54,7 @@ public class App {
      */
     public App(Distribuicao[] algoritmos, int caminhoes, int inicio, int execucoes, long limite) {
         this.alg = algoritmos;
+        this.algoritmo = 0;
         this.caminhoes = caminhoes;
         this.conjunto = inicio;
         this.execucoes = execucoes;
@@ -62,9 +69,9 @@ public class App {
      * @param algoritmo Algoritmo a ser utilizado
      * @return Tempo de execução em milissegundos
      */
-    private long tempoExecucao(int[] rotas, int algoritmo) {
+    private long tempoExecucao(int[] rotas) {
         long _inicio = System.currentTimeMillis();
-        this.alg[algoritmo].distribuirRotas(rotas, this.caminhoes);
+        this.alg[this.algoritmo].distribuirRotas(rotas, this.caminhoes);
         return System.currentTimeMillis() - _inicio;
     }
 
@@ -76,10 +83,12 @@ public class App {
      */
     private void testar() {
         boolean lock = true;
+        System.out.printf("Primeiro teste");
         while (lock) {
             long tempoTotal = 0;
-            for (int[] rotas : GeradorDeProblemas.geracaoDeRotas(this.conjunto, this.execucoes, 0.5)) {
-                long tempoExecucao = this.tempoExecucao(rotas, 0);
+            this.T = GeradorDeProblemas.geracaoDeRotas(this.conjunto, this.execucoes, 0.5);
+            for (int[] rotas : this.T) {
+                long tempoExecucao = this.tempoExecucao(rotas);
                 tempoTotal += tempoExecucao;
                 if (tempoExecucao > this.limite) {
                     System.out.printf("%nTamanho %d ultrapassou o limite de tempo.%n", this.conjunto);
@@ -91,26 +100,44 @@ public class App {
                 System.out.printf("%nTamanho %d - Tempo Médio: %d ms%n", this.conjunto, tempoTotal / this.execucoes);
             this.conjunto++;
         }
-        this.segundoTeste();
+        this.segundoQuartoTeste();
+        this.terceiroTeste();
+        this.segundoQuartoTeste();
     }
 
     /**
-     * Segundo teste, aumenta o tamanho dos conjuntos de T em T até atingir o
+     * Segundo e quarto teste, aumenta o tamanho dos conjuntos de T em T até atingir
+     * o
      * tamanho
      * 10T, sempre executando 10 testes de cada tamanho para utilizar a média.
      * 
      * Utiliza os mesmos conjuntos de tamanho T utilizados no teste anterior
      */
-    private void segundoTeste() {
-        int limiteTamanho = this.conjunto * 10; // 10T
-        int conjunto = this.conjunto;
-        while (this.conjunto <= limiteTamanho) {
+    private void segundoQuartoTeste() {
+        System.out.printf("%s teste", ++this.algoritmo == 2 ? "Segundo" : "Quarto");
+        int conjunto = this.conjunto * 2,
+         conjuntoInicial = this.conjunto, // Salva o tamanho inicial dos conjuntos de T
+          limiteTamanho = this.conjunto * 10; // 10T
+        for (int[] rotas : this.T) // Utiliza os mesmos conjuntos de tamanho T
+            System.out.printf("%nTamanho %d - Tempo: %d ms%n", this.conjunto, this.tempoExecucao(rotas));
+        while (this.conjunto <= limiteTamanho) { // Aumenta o tamanho dos conjuntos de T em T
             long tempoTotal = 0;
-            for (int[] rotas : GeradorDeProblemas.geracaoDeRotas(this.conjunto, this.execucoes, 0.5))
-                tempoTotal += this.tempoExecucao(rotas, 1);
-            System.out.printf("%nTamanho %d - Tempo Médio: %d ms%n", this.conjunto, tempoTotal / this.execucoes);
-            this.conjunto += conjunto;
+            for (int[] rotas : GeradorDeProblemas.geracaoDeRotas(conjunto, this.execucoes, 0.5))
+                tempoTotal += this.tempoExecucao(rotas);
+            System.out.printf("%nTamanho %d - Tempo Médio: %d ms%n", conjunto, tempoTotal / this.execucoes);
+            conjunto += conjuntoInicial;
         }
+    }
+
+    /**
+     * Utiliza os mesmos conjuntos de tamanho T alcancados no primeiro teste e faz
+     * apenas um teste
+     */
+    private void terceiroTeste() {
+        this.algoritmo++;
+        System.out.printf("%nTerceiro teste");
+        for (int[] rotas : this.T) // Utiliza os mesmos conjuntos de tamanho T
+            System.out.printf("%nTamanho %d - Tempo: %d ms%n", this.conjunto, this.tempoExecucao(rotas));
     }
 
     /**
@@ -119,8 +146,11 @@ public class App {
      * @param args Argumentos da linha de comando
      */
     public static void main(String[] args) {
-        new App(new Distribuicao[] { new Backtracking(), new GulosoAcumulado() }, 3, 6, 10, 30 * 1000).testar();
-
-        new App(new Distribuicao[] { new DivisaoConquista(), new ProgDinamica() }, 3, 6, 10, 30 * 1000).testar();
+        new App(new Distribuicao[] { new Backtracking(),
+                new GulosoAcumulado(),
+                new DivisaoConquista(),
+                new ProgDinamica() },
+                3, 6, 10, 30 * 1000)
+                .testar();
     }
 }
