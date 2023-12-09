@@ -91,7 +91,7 @@ public class ProgDinamica implements Distribuicao {
             // Criar uma nova tabela de soluções
             if (this.caminhoesDistribuidos.length - i - 1 != 0) {
                 int aceitavel = Arrays.stream(this.rotas).sum() / (this.caminhoesDistribuidos.length - i - 1);
-                this.T = new boolean[this.rotas.length + 1][aceitavel + (int) (aceitavel * 0.1) + 1];
+                this.T = new boolean[this.rotas.length + 1][(int) (aceitavel * 1.1) + 1];
             }
         }
         if (this.rotas.length != 0)

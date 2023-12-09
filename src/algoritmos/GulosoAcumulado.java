@@ -23,6 +23,7 @@ package algoritmos;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /**
@@ -51,7 +52,7 @@ public class GulosoAcumulado extends Guloso {
     /**
      * Classe auxiliar para a segunda estratégia gulosa
      */
-    private static class Caminhao {
+    private static class Caminhao implements Comparable<Caminhao> {
         /** Index do caminhão */
         private int numero;
         /** Quilometragem acumulada */
@@ -66,6 +67,11 @@ public class GulosoAcumulado extends Guloso {
             this.numero = numero;
             this.acumulado = 0;
         }
+
+        @Override
+        public int compareTo(Caminhao outro) {
+            return Integer.compare(this.acumulado, outro.acumulado);
+        }
     }
 
     @Override
@@ -78,8 +84,7 @@ public class GulosoAcumulado extends Guloso {
      * acumulada
      */
     private void distribuirRotas() {
-        PriorityQueue<Caminhao> fila = new PriorityQueue<>(this.caminhoes,
-                (a, b) -> Integer.compare(a.acumulado, b.acumulado));
+        PriorityQueue<Caminhao> fila = new PriorityQueue<>(this.caminhoes);
         List<Integer>[] rotasAdc = IntStream.range(0, this.caminhoes)
                 .mapToObj(i -> new LinkedList<Integer>())
                 .toArray(List[]::new);
@@ -93,7 +98,7 @@ public class GulosoAcumulado extends Guloso {
             fila.add(caminhao);
             rotasAdc[caminhao.numero - 1].add(this.rotas[i]);
         }
-        // print(fila, rotasAdc);
+        print(fila, rotasAdc);
     }
 
     /**
@@ -105,11 +110,16 @@ public class GulosoAcumulado extends Guloso {
     private static void print(PriorityQueue<Caminhao> fila, List<Integer>[] rotas) {
         while (!fila.isEmpty()) {
             Caminhao caminhao = fila.poll();
-            System.out.printf("Caminhão %d:  - total %dkm%n", caminhao.numero,
-                    // rotas[caminhao.numero -
-                    // 1].stream().map(Object::toString).collect(Collectors.joining(", ")),
-                    caminhao.acumulado //
+            System.out.printf("Caminhão %d: %s - total %dkm%n", caminhao.numero,
+                    rotas[caminhao.numero - 1].stream().map(Object::toString).collect(Collectors.joining(", ")),
+                    caminhao.acumulado
             );
         }
+    }
+
+    public static void main(String[] args) {
+        int[] rotas = { 15, 16, 17, 18, 19, 20 };
+        int caminhoes = 3;
+        new GulosoAcumulado().distribuirRotas(rotas, caminhoes);
     }
 }
