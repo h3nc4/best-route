@@ -98,7 +98,7 @@ public class GulosoAcumulado extends Guloso {
             fila.add(caminhao);
             rotasAdc[caminhao.numero - 1].add(this.rotas[i]);
         }
-        print(fila, rotasAdc);
+        // print(fila, rotasAdc);
     }
 
     /**

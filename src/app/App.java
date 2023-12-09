@@ -153,6 +153,7 @@ public class App {
     public static void main(String[] args) {
         new App(new Distribuicao[] { new Backtracking(),
                 new GulosoAcumulado(),
+                // new GulosoOrdem(),
                 new DivisaoConquista(),
                 new ProgDinamica() },
                 3, 6, 10, 30 * 1000)

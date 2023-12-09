@@ -105,9 +105,12 @@ public class DivisaoConquista implements Distribuicao {
             this.distribuirAtual(this.rotas.length, (int) (media * 0.9), (int) (media * 1.1), i);
             // Criar um novo array de rotas com as rotas que não foram distribuídas
             List<Integer> caminhao = this.caminhoesDistribuidos[i];
-            this.rotas = Arrays.stream(this.rotas)
-                    .filter(r -> caminhao.stream().noneMatch(r2 -> r2 == r))
-                    .toArray();
+            for (Integer rota : caminhao) {
+                int index = IntStream.range(0, this.rotas.length)
+                        .filter(i2 -> this.rotas[i2] == rota).findFirst().getAsInt();
+                this.rotas = IntStream.concat(IntStream.of(this.rotas).limit(index),
+                        IntStream.of(this.rotas).skip(index + 1)).toArray();
+            }
         }
         if (this.rotas.length != 0)
             this.guloso();
@@ -150,7 +153,7 @@ public class DivisaoConquista implements Distribuicao {
     }
 
     public static void main(String[] args) {
-        int[] rotas = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+        int[] rotas = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 9, 9, 9 };
         new DivisaoConquista().distribuirRotas(rotas, 3);
     }
 }

@@ -60,12 +60,12 @@ public class ProgDinamica implements Distribuicao {
         Arrays.sort(this.rotas);
         this.caminhoesDistribuidos = new LinkedList[numCaminhoes];
         int aceitavel = Arrays.stream(this.rotas).sum() / numCaminhoes;
-        this.T = new boolean[this.rotas.length + 1][aceitavel + (int) (aceitavel * 0.1) + 1];
+        this.T = new boolean[this.rotas.length + 1][aceitavel + 1];
     }
 
     @Override
     public void distribuirRotas(int[] rotas, int numCaminhoes) {
-        new ProgDinamica(rotas, numCaminhoes).distribuir().print();
+        new ProgDinamica(rotas, numCaminhoes).distribuir();// .print();
     }
 
     /**
@@ -85,10 +85,13 @@ public class ProgDinamica implements Distribuicao {
             // Adicionar as rotas distribuídas ao array de caminhões distribuídos
             this.caminhoesDistribuidos[i] = rotasDistribuidas;
             // Criar um novo array de rotas com as rotas que não foram distribuídas
-            this.rotas = IntStream.of(this.rotas)
-                    .filter(r -> rotasDistribuidas.stream().noneMatch(r2 -> r2 == r))
-                    .toArray();
+            for (Integer rota : rotasDistribuidas) {
+                int index = IntStream.range(0, this.rotas.length)
+                        .filter(i2 -> this.rotas[i2] == rota).findFirst().getAsInt();
+                this.rotas = IntStream.concat(IntStream.of(this.rotas).limit(index),
+                        IntStream.of(this.rotas).skip(index + 1)).toArray();
             // Criar uma nova tabela de soluções
+            }
             if (this.caminhoesDistribuidos.length - i - 1 != 0) {
                 int aceitavel = Arrays.stream(this.rotas).sum() / (this.caminhoesDistribuidos.length - i - 1);
                 this.T = new boolean[this.rotas.length + 1][(int) (aceitavel * 1.1) + 1];
@@ -202,5 +205,11 @@ public class ProgDinamica implements Distribuicao {
                             .sum())
                 menor = i;
         return menor;
+    }
+
+    public static void main(String[] args) {
+        int[] rotas = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9 };
+        int numCaminhoes = 3;
+        new ProgDinamica().distribuirRotas(rotas, numCaminhoes);
     }
 }
