@@ -84,9 +84,9 @@ public class Backtracking implements Distribuicao {
      * Método que imprime a melhor distribuição de rotas
      */
     private void print() {
-        for (int i = 0; i < this.caminhoes; i++) {
-            String rotas = this.melhorRotas.get(i).stream().map(Object::toString).collect(Collectors.joining(", "));
-            System.out.printf("Caminhão %d: rotas %s - total %dkm%n", i + 1, rotas, this.melhorDistrb[i]);
-        }
+        for (int i = 0; i < this.caminhoes; i++)
+            System.out.printf("Caminhão %d: rotas %s - total %dkm%n", i + 1,
+                    this.melhorRotas.get(i).stream().map(Object::toString).collect(Collectors.joining(", ")),
+                    this.melhorDistrb[i]);
     }
 }

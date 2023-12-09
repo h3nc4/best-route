@@ -54,7 +54,7 @@ public class GulosoOrdem extends Guloso {
                 resultados[(this.caminhoes - 1) - (i % this.caminhoes)] += this.rotas[i];
                 rotasAdc[(this.caminhoes - 1) - (i % this.caminhoes)].add(this.rotas[i]);
             }
-            if ((i + 1) % this.caminhoes == 0)
+            if ((i + 1) % this.caminhoes == 0) // Reverte a ordem
                 ordem = !ordem;
         }
         // this.print(resultados, rotasAdc);

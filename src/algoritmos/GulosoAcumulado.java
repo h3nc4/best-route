@@ -74,7 +74,7 @@ public class GulosoAcumulado extends Guloso {
             fila.add(caminhao);
             rotasAdc[caminhao.numero - 1].add(this.rotas[i]);
         }
-        // print(new PriorityQueue<>(fila), rotasAdc);
+        // print(fila, rotasAdc);
     }
 
     /**
@@ -85,10 +85,16 @@ public class GulosoAcumulado extends Guloso {
     private static void print(PriorityQueue<Caminhao> fila, List<Integer>[] rotas) {
         while (!fila.isEmpty()) {
             Caminhao caminhao = fila.poll();
-            System.out.printf("Caminhão %d: rotas %s - total %dkm%n", caminhao.numero,
-                    rotas[caminhao.numero - 1].stream().map(Object::toString).collect(Collectors.joining(", ")),
+            System.out.printf("Caminhão %d:  - total %dkm%n", caminhao.numero,
+                    // rotas[caminhao.numero - 1].stream().map(Object::toString).collect(Collectors.joining(", ")),
                     caminhao.acumulado //
             );
         }
+    }
+
+    public static void main(String[] args) {
+        int[] rotas = IntStream.range(0, 100000).map(i -> i + 1).toArray();
+        int caminhoes = 3;
+        new GulosoAcumulado().distribuirRotas(rotas, caminhoes);
     }
 }
