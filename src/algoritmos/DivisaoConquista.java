@@ -23,7 +23,6 @@ package algoritmos;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /**
@@ -31,6 +30,10 @@ import java.util.stream.IntStream;
  * rotas entre caminhões
  */
 public class DivisaoConquista implements Distribuicao {
+    /** Caminhões que já foram distribuídos */
+    private List<Integer>[] caminhoesDistribuidos;
+    /** Array com as rotas a serem distribuídas */
+    private int[] rotas;
 
     /**
      * Construtor da classe DivisaoConquista
@@ -38,54 +41,99 @@ public class DivisaoConquista implements Distribuicao {
     public DivisaoConquista() {
     }
 
-    @Override
-    public void distribuirRotas(int[] rotas, int numCaminhoes) {
-        Arrays.sort(rotas);
-        List<Integer>[] distribAtual = IntStream.range(0, numCaminhoes)
+    /**
+     * Construtor da classe DivisaoConquista
+     * 
+     * @param rotas        vetor com as rotas a serem distribuídas
+     * @param numCaminhoes número de caminhões disponíveis
+     */
+    private DivisaoConquista(int[] rotas, int numCaminhoes) {
+        this.rotas = Arrays.copyOf(rotas, rotas.length);
+        Arrays.sort(this.rotas);
+        this.caminhoesDistribuidos = IntStream.range(0, numCaminhoes)
                 .mapToObj(i -> new LinkedList<Integer>())
                 .toArray(List[]::new);
-        distribuir(rotas, rotas.length - 1, numCaminhoes - 1, distribAtual);
+    }
+
+    @Override
+    public void distribuirRotas(int[] rotas, int numCaminhoes) {
+        new DivisaoConquista(rotas, numCaminhoes).distribuir();
         // print(distribAtual);
     }
 
     /**
-     * Método privado e recursivo que de facto distribui as rotas entre os caminhões
+     * Resolve o problema da distribuição de rotas
      * 
-     * @param rotas         vetor com as rotas a serem distribuídas
-     * @param rotaAtual     índice da rota a ser distribuída
-     * @param caminhaoAtual índice do caminhão a ser usado
-     * @param distribAtual  distribuição atual das rotas
+     * @param n   tamanho do conjunto
+     * @param min valor mínimo da soma desejada
+     * @param max valor máximo da soma desejada
+     * @param i   índice do caminhão atual
+     * @return true se existe um subconjunto
      */
-    private static void distribuir(int[] rotas, int rotaAtual, int caminhaoAtual, List<Integer>[] distribAtual) {
-        // todas as rotas foram distribuídas
-        if (rotaAtual < 0)
-            return;
-        // Insere a rota atual no caminhão com menor quilometragem
-        distribAtual[getMenor(distribAtual)].add(rotas[rotaAtual]);
-        // Chama recursivamente para a próxima rota
-        distribuir(rotas, rotaAtual - 1, caminhaoAtual, distribAtual);
+    private boolean distribuirAtual(int n, int min, int max, int i) {
+        // Casos base
+        if (min <= 0 && max >= 0)
+            return true;
+        if (n == 0) // Se não há mais rotas para distribuir
+            return false;
+        // Inclui ou não o último elemento caso ele esteja dentro do alcance
+        if (rotas[n - 1] >= min && rotas[n - 1] <= max && distribuirAtual(n - 1, min, max, i))
+            return true;
+        else if (distribuirAtual(n - 1, min - rotas[n - 1], max - rotas[n - 1], i)) {
+            this.caminhoesDistribuidos[i].add(rotas[n - 1]);
+            return true;
+        }
+        // Caso contrário, continue verificando sem incluí-lo
+        return distribuirAtual(n - 1, min, max, i);
     }
 
     /**
-     * Encontrar caminhão com menor quilometragem
+     * Distribui as rotas entre os caminhões
      * 
-     * @param distribuicao distribuição atual das rotas
-     * @return index do caminhão com menor quilometragem
+     * Chama o método distribuirAtual() e remove as rotas distribuídas do array de
+     * rotas, adicionando-as ao array de caminhões distribuídos
+     * 
+     * Cria um novo array de rotas com as rotas que não foram distribuídas
+     * 
+     * @return A própria instância da classe
      */
-    private static int getMenor(List<Integer>[] distribuicao) {
-        return IntStream.range(1, distribuicao.length).reduce(0,
-                (indexMin, i) -> soma(distribuicao[i]) < soma(distribuicao[indexMin]) ? i
-                        : indexMin);
+    private void distribuir() {
+        for (int i = 0; i < this.caminhoesDistribuidos.length; i++) {
+            int media = Arrays.stream(this.rotas).sum() / this.caminhoesDistribuidos.length;
+            // Distribuir as rotas
+            this.distribuirAtual(this.rotas.length, (int) (media * 0.9), (int) (media * 1.1), i);
+            // Criar um novo array de rotas com as rotas que não foram distribuídas
+            List<Integer> caminhao = this.caminhoesDistribuidos[i];
+            this.rotas = Arrays.stream(this.rotas)
+                    .filter(r -> caminhao.stream().noneMatch(r2 -> r2 == r))
+                    .toArray();
+        }
+        if (this.rotas.length != 0)
+            this.guloso();
+        // this.print();
     }
 
     /**
-     * Somar as quilometragens de um caminhão
-     * 
-     * @param caminhao caminhão a ser somado
-     * @return quilometragem total do caminhão
+     * Função gulosa para distribuir as rotas restantes
      */
-    private static int soma(List<Integer> caminhao) {
-        return caminhao.stream().mapToInt(Integer::intValue).sum();
+    private void guloso() {
+        for (int i = 0; i < this.rotas.length; i++)
+            this.caminhoesDistribuidos[this.menorAcumulado()].add(this.rotas[i]);
+    }
+
+    /**
+     * Retorna o caminhão com menor quilometragem acumulada para a função gulosa
+     * 
+     * @return Index do caminhão com menor quilometragem acumulada
+     */
+    private int menorAcumulado() {
+        int menor = 0;
+        for (int i = 1; i < this.caminhoesDistribuidos.length; i++)
+            if (this.caminhoesDistribuidos[i].stream().mapToInt(Integer::intValue)
+                    .sum() < this.caminhoesDistribuidos[menor].stream().mapToInt(Integer::intValue)
+                            .sum())
+                menor = i;
+        return menor;
     }
 
     /**
@@ -93,11 +141,15 @@ public class DivisaoConquista implements Distribuicao {
      * 
      * @param distribuicao distribuição atual das rotas
      */
-    private static void print(List<Integer>[] distribuicao) {
-        for (int i = 0; i < distribuicao.length; i++) {
-            System.out.printf("Caminhão %d: rotas %s - total %dkm%n", (i + 1),
-                    distribuicao[i].stream().map(Object::toString).collect(Collectors.joining(", ")),
-                    soma(distribuicao[i]));
+    private void print() {
+        for (int i = 0; i < this.caminhoesDistribuidos.length; i++) {
+            System.out.printf("Caminhão %d: %s Total: %d\n", i + 1, this.caminhoesDistribuidos[i],
+                    this.caminhoesDistribuidos[i].stream().mapToInt(Integer::intValue).sum());
         }
+    }
+
+    public static void main(String[] args) {
+        int[] rotas = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+        new DivisaoConquista().distribuirRotas(rotas, 3);
     }
 }
