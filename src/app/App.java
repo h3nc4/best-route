@@ -1,3 +1,23 @@
+/*
+ *  Copyright 2023 Henrique Almeida
+ * 
+ * This file is part of Best-route.
+ * 
+ * Best-route is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * Best-route is distributed in the hope that it will be
+ * useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
+ * Public License for more details.
+ * 
+ * You should have received a copy of the GNU
+ * General Public License along with Best-route. If not, see
+ * <https://www.gnu.org/licenses/>.
+*/
+
 package app;
 
 import algoritmos.*;
@@ -38,7 +58,7 @@ public class App {
      * Executa o algoritmo 'algoritmo' com o conjunto de rotas 'rotas' e retorna o
      * tempo de execução em milissegundos
      * 
-     * @param rotas    Conjunto de rotas a serem distribuídas
+     * @param rotas     Conjunto de rotas a serem distribuídas
      * @param algoritmo Algoritmo a ser utilizado
      * @return Tempo de execução em milissegundos
      */
@@ -93,9 +113,14 @@ public class App {
         }
     }
 
+    /**
+     * Função principal do programa
+     * 
+     * @param args Argumentos da linha de comando
+     */
     public static void main(String[] args) {
-        // new App(new Distribuicao[] { new Backtracking(), new GulosoAcumulado() }, 3, 6, 10, 30 * 1000).testar();
+        new App(new Distribuicao[] { new Backtracking(), new GulosoAcumulado() }, 3, 6, 10, 30 * 1000).testar();
 
-        // new App(new Distribuicao[] { new DivisaoConquista(), new ProgDinamica() }, 3, 6, 10, 30 * 1000).testar();
+        new App(new Distribuicao[] { new DivisaoConquista(), new ProgDinamica() }, 3, 6, 10, 30 * 1000).testar();
     }
 }

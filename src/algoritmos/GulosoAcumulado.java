@@ -1,3 +1,23 @@
+/*
+ *  Copyright 2023 Henrique Almeida
+ * 
+ * This file is part of Best-route.
+ * 
+ * Best-route is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * Best-route is distributed in the hope that it will be
+ * useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
+ * Public License for more details.
+ * 
+ * You should have received a copy of the GNU
+ * General Public License along with Best-route. If not, see
+ * <https://www.gnu.org/licenses/>.
+*/
+
 package algoritmos;
 
 import java.util.LinkedList;
@@ -22,8 +42,8 @@ public class GulosoAcumulado extends Guloso {
     /**
      * Construtor da classe GulosoAcumulado
      * 
-     * @param rotas        vetor com as rotas a serem distribuídas
-     * @param numCaminhoes número de caminhões disponíveis
+     * @param rotas     vetor com as rotas a serem distribuídas
+     * @param caminhoes número de caminhões disponíveis
      */
     private GulosoAcumulado(int[] rotas, int caminhoes) {
         super(rotas, caminhoes);
@@ -80,21 +100,17 @@ public class GulosoAcumulado extends Guloso {
     /**
      * Método que imprime os resultados da segunda estratégia
      * 
-     * @param fila fila de prioridade com os caminhões
+     * @param fila  fila de prioridade com os caminhões
+     * @param rotas rotas adicionadas a cada caminhão
      */
     private static void print(PriorityQueue<Caminhao> fila, List<Integer>[] rotas) {
         while (!fila.isEmpty()) {
             Caminhao caminhao = fila.poll();
             System.out.printf("Caminhão %d:  - total %dkm%n", caminhao.numero,
-                    // rotas[caminhao.numero - 1].stream().map(Object::toString).collect(Collectors.joining(", ")),
+                    // rotas[caminhao.numero -
+                    // 1].stream().map(Object::toString).collect(Collectors.joining(", ")),
                     caminhao.acumulado //
             );
         }
-    }
-
-    public static void main(String[] args) {
-        int[] rotas = IntStream.range(0, 100000).map(i -> i + 1).toArray();
-        int caminhoes = 3;
-        new GulosoAcumulado().distribuirRotas(rotas, caminhoes);
     }
 }

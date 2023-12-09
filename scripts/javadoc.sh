@@ -1,1 +1,1 @@
-javadoc -d docs -sourcepath src -subpackages algoritmos
+javadoc -private -d docs -sourcepath src -subpackages algoritmos app

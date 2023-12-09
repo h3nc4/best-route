@@ -4,9 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Classe que gera conjuntos de rotas aleatórias para testes de FPAA
+ */
 public class GeradorDeProblemas {
+    /** Gerador de números aleatórios */
     static Random aleatorio = new Random(42);
+    /** Tamanho base das rotas */
     static final int TAM_BASE = 13;
+
+    /**
+     * Construtor da classe GeradorDeProblemas
+     */
+    public GeradorDeProblemas() {
+    }
 
     /**
      * Gerador de rotas aleatórias para testes de FPAA. Recebe como parâmetros a

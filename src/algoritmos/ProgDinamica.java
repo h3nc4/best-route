@@ -1,3 +1,23 @@
+/*
+ *  Copyright 2023 Henrique Almeida
+ * 
+ * This file is part of Best-route.
+ * 
+ * Best-route is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * Best-route is distributed in the hope that it will be
+ * useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
+ * Public License for more details.
+ * 
+ * You should have received a copy of the GNU
+ * General Public License along with Best-route. If not, see
+ * <https://www.gnu.org/licenses/>.
+*/
+
 package algoritmos;
 
 import java.util.Arrays;
@@ -11,7 +31,7 @@ import java.util.stream.IntStream;
  * de cada caminhão (um por um), linhas são as rotas a serem adicionadas e
  * células são verdadeiras se a rota pode ser adicionada ao caminhão e falsas
  * caso contrário. Caso o valor chegue a ser verdadeiro na célula
- * T[<x>][<valor_aceitavel>], então as rotas verdadeiras são retiradas de T,
+ * T[x][valor_aceitavel], então as rotas verdadeiras são retiradas de T,
  * adicionadas a um caminhão e o processo é repetido até que todas as rotas
  * sejam distribuídas.
  */
@@ -182,11 +202,5 @@ public class ProgDinamica implements Distribuicao {
                             .sum())
                 menor = i;
         return menor;
-    }
-
-    public static void main(String[] args) {
-        int[] rotas = { 35, 34, 33, 23, 21, 32, 35, 19, 26, 42 };
-        int caminhoes = 3;
-        new ProgDinamica().distribuirRotas(rotas, caminhoes);
     }
 }

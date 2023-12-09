@@ -1,3 +1,23 @@
+/*
+ *  Copyright 2023 Henrique Almeida
+ * 
+ * This file is part of Best-route.
+ * 
+ * Best-route is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * Best-route is distributed in the hope that it will be
+ * useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
+ * Public License for more details.
+ * 
+ * You should have received a copy of the GNU
+ * General Public License along with Best-route. If not, see
+ * <https://www.gnu.org/licenses/>.
+*/
+
 package algoritmos;
 
 import java.util.Arrays;
@@ -31,10 +51,10 @@ public class DivisaoConquista implements Distribuicao {
     /**
      * Método privado e recursivo que de facto distribui as rotas entre os caminhões
      * 
-     * @param rotas        vetor com as rotas a serem distribuídas
-     * @param rotaAtual    índice da rota a ser distribuída
+     * @param rotas         vetor com as rotas a serem distribuídas
+     * @param rotaAtual     índice da rota a ser distribuída
      * @param caminhaoAtual índice do caminhão a ser usado
-     * @param distribAtual distribuição atual das rotas
+     * @param distribAtual  distribuição atual das rotas
      */
     private static void distribuir(int[] rotas, int rotaAtual, int caminhaoAtual, List<Integer>[] distribAtual) {
         // todas as rotas foram distribuídas
