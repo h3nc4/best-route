@@ -86,6 +86,7 @@ public class App {
         System.out.printf("Primeiro teste");
         while (lock) {
             long tempoTotal = 0;
+            // T recebe o conjunto de rotas até o tamanho T
             this.T = GeradorDeProblemas.geracaoDeRotas(this.conjunto, this.execucoes, 0.5);
             for (int[] rotas : this.T) {
                 long tempoExecucao = this.tempoExecucao(rotas);
@@ -114,18 +115,20 @@ public class App {
      * Utiliza os mesmos conjuntos de tamanho T utilizados no teste anterior
      */
     private void segundoQuartoTeste() {
-        System.out.printf("%s teste", ++this.algoritmo == 2 ? "Segundo" : "Quarto");
-        int conjunto = this.conjunto * 2,
-         conjuntoInicial = this.conjunto, // Salva o tamanho inicial dos conjuntos de T
-          limiteTamanho = this.conjunto * 10; // 10T
+        System.out.printf("%n%s teste", ++this.algoritmo == 1 ? "Segundo" : "Quarto");
+        int conjuntoLocal = this.conjunto * 2,
+                conjuntoInicial = this.conjunto, // Salva o tamanho inicial dos conjuntos de T
+                limiteTamanho = this.conjunto * 10; // 10T
+        long tempoTotal = 0;
         for (int[] rotas : this.T) // Utiliza os mesmos conjuntos de tamanho T
-            System.out.printf("%nTamanho %d - Tempo: %d ms%n", this.conjunto, this.tempoExecucao(rotas));
-        while (this.conjunto <= limiteTamanho) { // Aumenta o tamanho dos conjuntos de T em T
-            long tempoTotal = 0;
-            for (int[] rotas : GeradorDeProblemas.geracaoDeRotas(conjunto, this.execucoes, 0.5))
+            tempoTotal += this.tempoExecucao(rotas);
+        System.out.printf("%nTamanho %d - Tempo: %d ms%n", conjuntoLocal, tempoTotal / this.T.size());
+        while (conjuntoLocal <= limiteTamanho) { // Aumenta o tamanho dos conjuntos de T em T
+            tempoTotal = 0;
+            for (int[] rotas : GeradorDeProblemas.geracaoDeRotas(conjuntoLocal, this.execucoes, 0.5))
                 tempoTotal += this.tempoExecucao(rotas);
-            System.out.printf("%nTamanho %d - Tempo Médio: %d ms%n", conjunto, tempoTotal / this.execucoes);
-            conjunto += conjuntoInicial;
+            System.out.printf("%nTamanho %d - Tempo Médio: %d ms%n", conjuntoLocal, tempoTotal / this.execucoes);
+            conjuntoLocal += conjuntoInicial;
         }
     }
 
@@ -136,8 +139,10 @@ public class App {
     private void terceiroTeste() {
         this.algoritmo++;
         System.out.printf("%nTerceiro teste");
+        long tempoTotal = 0;
         for (int[] rotas : this.T) // Utiliza os mesmos conjuntos de tamanho T
-            System.out.printf("%nTamanho %d - Tempo: %d ms%n", this.conjunto, this.tempoExecucao(rotas));
+            tempoTotal += this.tempoExecucao(rotas);
+        System.out.printf("%nTamanho %d - Tempo: %d ms%n", this.conjunto, tempoTotal / this.T.size());
     }
 
     /**
