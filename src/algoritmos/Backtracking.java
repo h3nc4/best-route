@@ -58,7 +58,7 @@ public class Backtracking implements Distribuicao {
      */
     private Backtracking(int[] rotas, int numCaminhoes) {
         this.rotas = Arrays.copyOf(rotas, rotas.length);
-        Arrays.sort(this.rotas);
+        Arrays.sort(this.rotas); // Ordena as rotas para melhorar a poda
         this.caminhoes = numCaminhoes;
         this.atualRotas = new LinkedList[numCaminhoes];
         for (int i = 0; i < numCaminhoes; i++)
@@ -82,20 +82,23 @@ public class Backtracking implements Distribuicao {
     private Backtracking distribuir(int q) {
         // Poda de distribuições inferiores
         if (q == this.rotas.length) {
+            // Verifica se a distribuição atual é melhor do que a melhor conhecida até agora
             if (Arrays.stream(this.distbAtual).max().getAsInt() < Arrays.stream(this.melhorDistrb).max().getAsInt()) {
+                // Atualiza as melhores distâncias e rotas
                 System.arraycopy(this.distbAtual, 0, this.melhorDistrb, 0, this.caminhoes);
-                melhorRotas = Arrays.stream(atualRotas).map(ArrayList::new).collect(Collectors.toList());
+                this.melhorRotas = Arrays.stream(atualRotas).map(ArrayList::new).collect(Collectors.toList());
             }
             return this;
         }
 
+        // Loop através dos caminhões para tentar distribuir a rota atual
         for (int i = 0; i < this.caminhoes; i++) {
             LinkedList<Integer> caminhao = this.atualRotas[i];
-            caminhao.add(this.rotas[q]);
-            this.distbAtual[i] += this.rotas[q];
-            this.distribuir(q + 1);
-            caminhao.removeFirstOccurrence(this.rotas[q]);
-            this.distbAtual[i] -= this.rotas[q];
+            caminhao.add(this.rotas[q]); // Adiciona a rota ao caminhão atual
+            this.distbAtual[i] += this.rotas[q]; // Atualiza a distância do caminhão atual
+            this.distribuir(q + 1); // Chama recursivamente para a próxima rota
+            caminhao.removeFirstOccurrence(this.rotas[q]); // Desfaz a adição para tentar outras distribuições
+            this.distbAtual[i] -= this.rotas[q]; // Desfaz a atualização da distância
         }
         return this;
     }
