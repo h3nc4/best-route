@@ -63,7 +63,6 @@ public class Backtracking implements Distribuicao {
         Arrays.sort(this.rotas); // Ordena as rotas para melhorar a poda
         this.caminhoes = numCaminhoes;
         this.atualRotas = new LinkedList[numCaminhoes];
-        //this.melhorRotas = new ArrayList<>(numCaminhoes);
         for (int i = 0; i < numCaminhoes; i++)
             this.atualRotas[i] = new LinkedList<>();
         this.distbAtual = new int[numCaminhoes];
@@ -103,7 +102,7 @@ public class Backtracking implements Distribuicao {
 
         // Loop através dos caminhões para tentar distribuir a rota atual
         for (int i = 0; i < this.caminhoes; i++) {
-            if (this.distbAtual[i] + rotas[q] > this.media)
+            if (this.distbAtual[i] + rotas[q] > this.media && q != this.rotas.length - 1)
                 continue; // Poda de distribuições inferiores
             this.atualRotas[i].add(rotas[q]);
             this.distbAtual[i] += rotas[q];
@@ -136,6 +135,6 @@ public class Backtracking implements Distribuicao {
         // new Backtracking().distribuirRotas(new int[] { 32, 51, 32, 43, 42, 30, 42,
         // 51, 43, 51, 29, 25, 27, 32, 29, 55,
         // 43, 29, 32, 44, 55, 29, 53, 30, 24, 27 }, 3); não é capaz de resolver
-         new Backtracking().distribuirRotas(new int[] { 35, 34, 33, 23, 21, 32, 35 }, 3);
+         new Backtracking().distribuirRotas(new int[] { 35, 34, 33, 23, 21, 32, 35, 19, 26, 42 }, 3);
     }
 }
