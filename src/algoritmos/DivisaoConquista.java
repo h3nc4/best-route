@@ -20,7 +20,6 @@
 
 package algoritmos;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -115,8 +114,26 @@ public class DivisaoConquista implements Distribuicao {
         }
         if (this.rotas.length != 0)
             this.guloso();
+        this.conquista();
         if (Distribuicao.PRINT)
             this.print();
+    }
+
+    /**
+     * Função de conquista para remover rotas de caminhões que estouraram a média
+     * e adicionar aos caminhões que estão abaixo da média
+     */
+    private void conquista() {
+        int media = Arrays.stream(this.rotas).sum() / this.caminhoesDistribuidos.length;
+        for (int i = 0; i < this.caminhoesDistribuidos.length; i++) {
+            int soma = this.caminhoesDistribuidos[i].stream().mapToInt(Integer::intValue).sum();
+            int min = this.menorAcumulado();
+            if (soma > media) {
+                List<Integer> caminhaoMin = this.caminhoesDistribuidos[min];
+                List<Integer> caminhaoAtual = this.caminhoesDistribuidos[i];
+                caminhaoMin.add(caminhaoAtual.removeLast());
+            }
+        }
     }
 
     /**

@@ -77,6 +77,9 @@ Caso não seja, o máximo é 10% maior que a média e o mínimo é 10% menor que
 O caso base se torna a validação se a soma das rotas está entre o máximo e o mínimo.
 .PP
 Caso no final haja uma rota sem alocação, o algoritmo usa o método guloso com quilometragem acumulada para alocar a rota restante.
+.PP
+A conquista é feita através da verificação de todas as rotas, caso um caminhão ultrapasse o valor máximo,
+seu último item é removido e a rota é alocada para o caminhão com menor quilometragem acumulada.
 .NH 2
 Programação Dinâmica
 .PP

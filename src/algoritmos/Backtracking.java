@@ -71,11 +71,11 @@ public class Backtracking implements Distribuicao {
         Arrays.fill(this.melhorDistrb, Integer.MAX_VALUE);
         int soma = Arrays.stream(rotas).sum();
         this.media = soma / this.caminhoes;
-        this.mediaExata = true;
-        if (soma % this.caminhoes != 0) {// caso não haja média exata
+        //this.mediaExata = true;
+        //if (soma % this.caminhoes != 0) {// caso não haja média exata
             this.media *= 1.1; // arrredonda em 10%
-            this.mediaExata = false;
-        }
+        //    this.mediaExata = false;
+        //} comentado para o teste de tempo
     }
 
     @Override
