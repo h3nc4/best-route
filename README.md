@@ -1,4 +1,4 @@
-# Trabalho de Fundamentos de Projeto e Análise de Algoritmos
+# Tratamento de Problemas NP - Melhor Rota
 
 “Uma empresa de distribuição e logística possui uma frota composta por N caminhões. Semanalmente, esta empresa organiza suas entregas em M rotas, as quais devem ser distribuídas entre os caminhões disponíveis. A empresa deseja fazer a distribuição de maneira que cada caminhão cumpra a mesma quilometragem, evitando assim que ao final do período existam caminhões ociosos enquanto outros ainda estão executando várias rotas. Se não for possível cumprir a mesma quilometragem, que a diferença entre a quilometragem dos caminhões seja a menor possível, diminuindo o problema.
 
@@ -18,8 +18,10 @@ Neste repositório, há 4 métodos de solução comuns para o problema apresenta
 
 Estes são: backtracking, algoritmo guloso, divisão e conquista e programação dinâmica.
 
+Veja o [relatório](pdf/relatório.pdf) para mais informações.
+
 Best-route is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
 Best-route is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
 
-See LICENSE for more information.
+See [LICENSE](LICENSE) for more information.
