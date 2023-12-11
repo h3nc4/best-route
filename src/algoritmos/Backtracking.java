@@ -102,8 +102,9 @@ public class Backtracking implements Distribuicao {
 
         // Loop através dos caminhões para tentar distribuir a rota atual
         for (int i = 0; i < this.caminhoes; i++) {
+            // Verifica se a adição da rota atual ultrapassa a média
             if (this.distbAtual[i] + rotas[q] > this.media && q != this.rotas.length - 1)
-                continue; // Poda de distribuições inferiores
+                continue; // Poda de distribuições inválidas
             this.atualRotas[i].add(rotas[q]);
             this.distbAtual[i] += rotas[q];
             this.distribuir(q + 1);
@@ -129,12 +130,12 @@ public class Backtracking implements Distribuicao {
      * @param args argumentos da linha de comandos
      */
     public static void main(String[] args) {
-        //new Backtracking().distribuirRotas(new int[] { 40, 36, 38, 29, 32, 28, 31,
-        //        35, 31, 30, 32, 30, 29, 39, 35, 38,
-        //       39, 35, 32, 38, 32, 33, 29, 33, 29, 39, 28 }, 3);
+        // new Backtracking().distribuirRotas(new int[] { 40, 36, 38, 29, 32, 28, 31,
+        // 35, 31, 30, 32, 30, 29, 39, 35, 38,
+        // 39, 35, 32, 38, 32, 33, 29, 33, 29, 39, 28 }, 3);
         // new Backtracking().distribuirRotas(new int[] { 32, 51, 32, 43, 42, 30, 42,
         // 51, 43, 51, 29, 25, 27, 32, 29, 55,
         // 43, 29, 32, 44, 55, 29, 53, 30, 24, 27 }, 3); não é capaz de resolver
-         new Backtracking().distribuirRotas(new int[] { 35, 34, 33, 23, 21, 32, 35, 19, 26, 42 }, 3);
+        new Backtracking().distribuirRotas(new int[] { 35, 34, 33, 23, 21, 32, 35, 19, 26, 42 }, 3);
     }
 }
