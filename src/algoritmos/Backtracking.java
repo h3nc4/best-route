@@ -43,6 +43,8 @@ public class Backtracking implements Distribuicao {
     private int[] distbAtual;
     /** Array com as melhores distâncias */
     private int[] melhorDistrb;
+    /** Média das distâncias */
+    private int media;
 
     /**
      * Construtor da classe Backtracking
@@ -61,11 +63,16 @@ public class Backtracking implements Distribuicao {
         Arrays.sort(this.rotas); // Ordena as rotas para melhorar a poda
         this.caminhoes = numCaminhoes;
         this.atualRotas = new LinkedList[numCaminhoes];
+        //this.melhorRotas = new ArrayList<>(numCaminhoes);
         for (int i = 0; i < numCaminhoes; i++)
             this.atualRotas[i] = new LinkedList<>();
         this.distbAtual = new int[numCaminhoes];
         this.melhorDistrb = new int[numCaminhoes];
         Arrays.fill(this.melhorDistrb, Integer.MAX_VALUE);
+        int soma = Arrays.stream(rotas).sum();
+        this.media = soma / this.caminhoes;
+        if (soma % this.caminhoes != 0) // caso não haja média exata
+            this.media *= 1.1; // arrredonda em 10%
     }
 
     @Override
@@ -82,25 +89,27 @@ public class Backtracking implements Distribuicao {
      * @return instância da classe Backtracking
      */
     private Backtracking distribuir(int q) {
-        // Poda de distribuições inferiores
+        // Verifica se todas as rotas foram distribuídas
         if (q == this.rotas.length) {
             // Verifica se a distribuição atual é melhor do que a melhor conhecida até agora
             if (Arrays.stream(this.distbAtual).max().getAsInt() < Arrays.stream(this.melhorDistrb).max().getAsInt()) {
                 // Atualiza as melhores distâncias e rotas
                 System.arraycopy(this.distbAtual, 0, this.melhorDistrb, 0, this.caminhoes);
-                melhorRotas = Arrays.stream(atualRotas).map(lista -> new ArrayList<>(lista))
+                this.melhorRotas = Arrays.stream(this.atualRotas).map(lista -> new ArrayList<>(lista))
                         .collect(Collectors.toList());
             }
-            return this;
+            return this; // De qualquer forma, retorna
         }
 
         // Loop através dos caminhões para tentar distribuir a rota atual
         for (int i = 0; i < this.caminhoes; i++) {
-            atualRotas[i].add(rotas[q]);
-            distbAtual[i] += rotas[q];
-            distribuir(q + 1);
-            atualRotas[i].removeFirstOccurrence(rotas[q]);
-            distbAtual[i] -= rotas[q];
+            if (this.distbAtual[i] + rotas[q] > this.media)
+                continue; // Poda de distribuições inferiores
+            this.atualRotas[i].add(rotas[q]);
+            this.distbAtual[i] += rotas[q];
+            this.distribuir(q + 1);
+            this.atualRotas[i].removeLast();
+            this.distbAtual[i] -= rotas[q];
         }
         return this;
     }
@@ -109,7 +118,7 @@ public class Backtracking implements Distribuicao {
      * Método que imprime a melhor distribuição de rotas
      */
     private void print() {
-        for (int i = 0; i < this.caminhoes; i++)
+        for (int i = 0; i < this.melhorRotas.size(); i++)
             System.out.printf("Caminhão %d: rotas %s - total %dkm%n", i + 1,
                     this.melhorRotas.get(i).stream().map(Object::toString).collect(Collectors.joining(", ")),
                     this.melhorDistrb[i]);
@@ -121,12 +130,12 @@ public class Backtracking implements Distribuicao {
      * @param args argumentos da linha de comandos
      */
     public static void main(String[] args) {
-        // new Backtracking().distribuirRotas(new int[] { 40, 36, 38, 29, 32, 28, 31,
-        // 35, 31, 30, 32, 30, 29, 39, 35, 38,
-        // 39, 35, 32, 38, 32, 33, 29, 33, 29, 39, 28 }, 3);
+        //new Backtracking().distribuirRotas(new int[] { 40, 36, 38, 29, 32, 28, 31,
+        //        35, 31, 30, 32, 30, 29, 39, 35, 38,
+        //       39, 35, 32, 38, 32, 33, 29, 33, 29, 39, 28 }, 3);
         // new Backtracking().distribuirRotas(new int[] { 32, 51, 32, 43, 42, 30, 42,
         // 51, 43, 51, 29, 25, 27, 32, 29, 55,
         // 43, 29, 32, 44, 55, 29, 53, 30, 24, 27 }, 3); não é capaz de resolver
-        new Backtracking().distribuirRotas(new int[] { 35, 34, 33, 23, 21, 32, 35, 19, 26, 42 }, 3);
+         new Backtracking().distribuirRotas(new int[] { 35, 34, 33, 23, 21, 32, 35 }, 3);
     }
 }

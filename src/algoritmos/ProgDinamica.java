@@ -60,7 +60,10 @@ public class ProgDinamica implements Distribuicao {
         this.rotas = Arrays.copyOf(rotas, rotas.length);
         Arrays.sort(this.rotas);
         this.caminhoesDistribuidos = new LinkedList[numCaminhoes];
-        int aceitavel = Arrays.stream(this.rotas).sum() / numCaminhoes;
+        int soma = Arrays.stream(rotas).sum();
+        int aceitavel = soma / numCaminhoes;
+        if (soma % numCaminhoes != 0) // caso não haja média exata
+            aceitavel *= 1.1; // arrredonda em 10%
         this.T = new boolean[this.rotas.length + 1][aceitavel + 1];
     }
 

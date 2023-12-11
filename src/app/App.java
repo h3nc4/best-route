@@ -96,7 +96,8 @@ public class App {
                 long tempoExecucao = this.tempoExecucao(rotas);
                 tempoTotal += tempoExecucao;
                 if (tempoExecucao > this.limite) {
-                    System.out.printf("%nTamanho %d ultrapassou o limite de tempo.%n", this.conjunto);
+                    System.out.printf("%nTamanho %d ultrapassou o limite de tempo com %d.%n", this.conjunto,
+                            tempoExecucao);
                     lock = false;
                     break; // Interrompe as execuções para esse tamanho
                 }

@@ -102,7 +102,7 @@ public class DivisaoConquista implements Distribuicao {
         for (int i = 0; i < this.caminhoesDistribuidos.length; i++) {
             int media = Arrays.stream(this.rotas).sum() / this.caminhoesDistribuidos.length;
             // Distribuir as rotas
-            this.distribuirAtual(this.rotas.length, (int) (media * 0.9), (int) (media * 1.1), i);
+            this.distribuirAtual(this.rotas.length, (int) (media /* 0.9*/), (int) (media /* 1.1*/), i);
             // Criar um novo array de rotas com as rotas que não foram distribuídas
             List<Integer> caminhao = this.caminhoesDistribuidos[i];
             for (Integer rota : caminhao) {
