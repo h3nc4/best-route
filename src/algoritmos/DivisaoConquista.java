@@ -20,6 +20,7 @@
 
 package algoritmos;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -62,7 +63,7 @@ public class DivisaoConquista implements Distribuicao {
     }
 
     /**
-     * Resolve o problema da distribuição de rotas
+     * Resolve o problema da distribuição de rotas com a soma de subconjuntos
      * 
      * @param n   tamanho do conjunto
      * @param min valor mínimo da soma desejada
@@ -102,7 +103,7 @@ public class DivisaoConquista implements Distribuicao {
         for (int i = 0; i < this.caminhoesDistribuidos.length; i++) {
             int media = Arrays.stream(this.rotas).sum() / this.caminhoesDistribuidos.length;
             // Distribuir as rotas
-            this.distribuirAtual(this.rotas.length, (int) (media /* 0.9*/), (int) (media /* 1.1*/), i);
+            this.distribuirAtual(this.rotas.length, (int) (media /* 0.9 */), (int) (media /* 1.1 */), i);
             // Criar um novo array de rotas com as rotas que não foram distribuídas
             List<Integer> caminhao = this.caminhoesDistribuidos[i];
             for (Integer rota : caminhao) {
@@ -160,11 +161,13 @@ public class DivisaoConquista implements Distribuicao {
      * @param args argumentos da linha de comandos
      */
     public static void main(String[] args) {
+        long inicio = System.nanoTime();
         new DivisaoConquista()
                 .distribuirRotas(new int[] { 40, 36, 38, 29, 32, 28, 31, 35, 31, 30, 32, 30, 29, 39, 35, 38,
                         39, 35, 32, 38, 32, 33, 29, 33, 29, 39, 28 }, 3);
         new DivisaoConquista()
                 .distribuirRotas(new int[] { 32, 51, 32, 43, 42, 30, 42, 51, 43, 51, 29, 25, 27, 32, 29, 55,
                         43, 29, 32, 44, 55, 29, 53, 30, 24, 27 }, 3);
+        System.out.printf("Tempo de execução: %fms%n", (System.nanoTime() - inicio) / 1e6);
     }
 }

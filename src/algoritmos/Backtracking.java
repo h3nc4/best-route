@@ -101,11 +101,11 @@ public class Backtracking implements Distribuicao {
                 this.melhorRotas = Arrays.stream(this.atualRotas).map(lista -> new ArrayList<>(lista))
                         .collect(Collectors.toList());
                 // pega o valor máximo de melhorDistrb
-                int max = Arrays.stream(this.melhorDistrb).max().getAsInt();
-                if (this.mediaExata && max == this.media) {
-                    this.print();
-                    System.exit(0);
-                }
+                //int max = Arrays.stream(this.melhorDistrb).max().getAsInt();
+                //if (this.mediaExata && max == this.media) {
+                //    this.print();
+                //    System.exit(0);
+                //} Não pode ser usado em teste de tempo, somente indivíduos
 
             }
             return this; // De qualquer forma, retorna
