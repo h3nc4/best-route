@@ -70,7 +70,9 @@ public class Backtracking implements Distribuicao {
 
     @Override
     public void distribuirRotas(int[] rotas, int numCaminhoes) {
-        new Backtracking(rotas, numCaminhoes).distribuir(0); // .print();
+        Backtracking solucao = new Backtracking(rotas, numCaminhoes).distribuir(0);
+        if (Distribuicao.PRINT)
+            solucao.print();
     }
 
     /**
@@ -86,19 +88,19 @@ public class Backtracking implements Distribuicao {
             if (Arrays.stream(this.distbAtual).max().getAsInt() < Arrays.stream(this.melhorDistrb).max().getAsInt()) {
                 // Atualiza as melhores distâncias e rotas
                 System.arraycopy(this.distbAtual, 0, this.melhorDistrb, 0, this.caminhoes);
-                this.melhorRotas = Arrays.stream(atualRotas).map(ArrayList::new).collect(Collectors.toList());
+                melhorRotas = Arrays.stream(atualRotas).map(lista -> new ArrayList<>(lista))
+                        .collect(Collectors.toList());
             }
             return this;
         }
 
         // Loop através dos caminhões para tentar distribuir a rota atual
         for (int i = 0; i < this.caminhoes; i++) {
-            LinkedList<Integer> caminhao = this.atualRotas[i];
-            caminhao.add(this.rotas[q]); // Adiciona a rota ao caminhão atual
-            this.distbAtual[i] += this.rotas[q]; // Atualiza a distância do caminhão atual
-            this.distribuir(q + 1); // Chama recursivamente para a próxima rota
-            caminhao.removeFirstOccurrence(this.rotas[q]); // Desfaz a adição para tentar outras distribuições
-            this.distbAtual[i] -= this.rotas[q]; // Desfaz a atualização da distância
+            atualRotas[i].add(rotas[q]);
+            distbAtual[i] += rotas[q];
+            distribuir(q + 1);
+            atualRotas[i].removeFirstOccurrence(rotas[q]);
+            distbAtual[i] -= rotas[q];
         }
         return this;
     }
@@ -111,5 +113,20 @@ public class Backtracking implements Distribuicao {
             System.out.printf("Caminhão %d: rotas %s - total %dkm%n", i + 1,
                     this.melhorRotas.get(i).stream().map(Object::toString).collect(Collectors.joining(", ")),
                     this.melhorDistrb[i]);
+    }
+
+    /**
+     * Método main de teste
+     * 
+     * @param args argumentos da linha de comandos
+     */
+    public static void main(String[] args) {
+        // new Backtracking().distribuirRotas(new int[] { 40, 36, 38, 29, 32, 28, 31,
+        // 35, 31, 30, 32, 30, 29, 39, 35, 38,
+        // 39, 35, 32, 38, 32, 33, 29, 33, 29, 39, 28 }, 3);
+        // new Backtracking().distribuirRotas(new int[] { 32, 51, 32, 43, 42, 30, 42,
+        // 51, 43, 51, 29, 25, 27, 32, 29, 55,
+        // 43, 29, 32, 44, 55, 29, 53, 30, 24, 27 }, 3); não é capaz de resolver
+        new Backtracking().distribuirRotas(new int[] { 35, 34, 33, 23, 21, 32, 35, 19, 26, 42 }, 3);
     }
 }

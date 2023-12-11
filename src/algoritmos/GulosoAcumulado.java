@@ -98,7 +98,8 @@ public class GulosoAcumulado extends Guloso {
             fila.add(caminhao);
             rotasAdc[caminhao.numero - 1].add(this.rotas[i]);
         }
-        // print(fila, rotasAdc);
+        if (Distribuicao.PRINT)
+            print(fila, rotasAdc);
     }
 
     /**
@@ -108,18 +109,22 @@ public class GulosoAcumulado extends Guloso {
      * @param rotas rotas adicionadas a cada caminhão
      */
     private static void print(PriorityQueue<Caminhao> fila, List<Integer>[] rotas) {
-        while (!fila.isEmpty()) {
-            Caminhao caminhao = fila.poll();
-            System.out.printf("Caminhão %d: %s - total %dkm%n", caminhao.numero,
-                    rotas[caminhao.numero - 1].stream().map(Object::toString).collect(Collectors.joining(", ")),
-                    caminhao.acumulado
-            );
-        }
+        fila.forEach(caminhao -> System.out.printf("Caminhão %d: rotas %s - total %dkm%n", caminhao.numero,
+                rotas[caminhao.numero - 1].stream().map(Object::toString).collect(Collectors.joining(", ")),
+                caminhao.acumulado));
     }
 
+    /**
+     * Método main de teste
+     * 
+     * @param args argumentos da linha de comandos
+     */
     public static void main(String[] args) {
-        int[] rotas = { 15, 16, 17, 18, 19, 20 };
-        int caminhoes = 3;
-        new GulosoAcumulado().distribuirRotas(rotas, caminhoes);
+        new GulosoAcumulado()
+                .distribuirRotas(new int[] { 40, 36, 38, 29, 32, 28, 31, 35, 31, 30, 32, 30, 29, 39, 35, 38,
+                        39, 35, 32, 38, 32, 33, 29, 33, 29, 39, 28 }, 3);
+        new GulosoAcumulado()
+                .distribuirRotas(new int[] { 32, 51, 32, 43, 42, 30, 42, 51, 43, 51, 29, 25, 27, 32, 29, 55,
+                        43, 29, 32, 44, 55, 29, 53, 30, 24, 27 }, 3);
     }
 }

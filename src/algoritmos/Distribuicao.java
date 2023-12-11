@@ -24,6 +24,8 @@ package algoritmos;
  * Interface que define o método de distribuição de rotas entre caminhões
  */
 public interface Distribuicao {
+    public static final boolean PRINT = false;
+
     /**
      * Método que distribui as rotas entre os caminhões
      * 

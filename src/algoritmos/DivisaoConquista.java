@@ -23,6 +23,7 @@ package algoritmos;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /**
@@ -58,7 +59,6 @@ public class DivisaoConquista implements Distribuicao {
     @Override
     public void distribuirRotas(int[] rotas, int numCaminhoes) {
         new DivisaoConquista(rotas, numCaminhoes).distribuir();
-        // print(distribAtual);
     }
 
     /**
@@ -114,7 +114,8 @@ public class DivisaoConquista implements Distribuicao {
         }
         if (this.rotas.length != 0)
             this.guloso();
-        // this.print();
+        if (Distribuicao.PRINT)
+            this.print();
     }
 
     /**
@@ -147,13 +148,23 @@ public class DivisaoConquista implements Distribuicao {
      */
     private void print() {
         for (int i = 0; i < this.caminhoesDistribuidos.length; i++) {
-            System.out.printf("Caminhão %d: %s Total: %d\n", i + 1, this.caminhoesDistribuidos[i],
+            System.out.printf("Caminhão %d: rotas %s - total %dkm%n", i + 1,
+                    this.caminhoesDistribuidos[i].stream().map(Object::toString).collect(Collectors.joining(", ")),
                     this.caminhoesDistribuidos[i].stream().mapToInt(Integer::intValue).sum());
         }
     }
 
+    /**
+     * Método main de teste
+     * 
+     * @param args argumentos da linha de comandos
+     */
     public static void main(String[] args) {
-        int[] rotas = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 9, 9, 9 };
-        new DivisaoConquista().distribuirRotas(rotas, 3);
+        new DivisaoConquista()
+                .distribuirRotas(new int[] { 40, 36, 38, 29, 32, 28, 31, 35, 31, 30, 32, 30, 29, 39, 35, 38,
+                        39, 35, 32, 38, 32, 33, 29, 33, 29, 39, 28 }, 3);
+        new DivisaoConquista()
+                .distribuirRotas(new int[] { 32, 51, 32, 43, 42, 30, 42, 51, 43, 51, 29, 25, 27, 32, 29, 55,
+                        43, 29, 32, 44, 55, 29, 53, 30, 24, 27 }, 3);
     }
 }

@@ -77,7 +77,8 @@ public class GulosoOrdem extends Guloso {
             if ((i + 1) % this.caminhoes == 0) // Reverte a ordem
                 ordem = !ordem;
         }
-        // this.print(resultados, rotasAdc);
+        if (Distribuicao.PRINT)
+            this.print(resultados, rotasAdc);
     }
 
     /**
@@ -90,5 +91,17 @@ public class GulosoOrdem extends Guloso {
         for (int i = 0; i < resultados.length; i++)
             System.out.printf("Caminhão %d: rotas %s - total %dkm%n", (i + 1),
                     rotas[i].stream().map(Object::toString).collect(Collectors.joining(", ")), resultados[i]);
+    }
+
+    /**
+     * Método main de teste
+     * 
+     * @param args argumentos da linha de comandos
+     */
+    public static void main(String[] args) {
+        new GulosoOrdem().distribuirRotas(new int[] { 40, 36, 38, 29, 32, 28, 31, 35, 31, 30, 32, 30, 29, 39, 35, 38,
+                39, 35, 32, 38, 32, 33, 29, 33, 29, 39, 28 }, 3);
+        new GulosoOrdem().distribuirRotas(new int[] { 32, 51, 32, 43, 42, 30, 42, 51, 43, 51, 29, 25, 27, 32, 29, 55,
+                43, 29, 32, 44, 55, 29, 53, 30, 24, 27 }, 3);
     }
 }

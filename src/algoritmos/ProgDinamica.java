@@ -23,6 +23,7 @@ package algoritmos;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /**
@@ -65,7 +66,9 @@ public class ProgDinamica implements Distribuicao {
 
     @Override
     public void distribuirRotas(int[] rotas, int numCaminhoes) {
-        new ProgDinamica(rotas, numCaminhoes).distribuir();// .print();
+        ProgDinamica solucao = new ProgDinamica(rotas, numCaminhoes).distribuir();
+        if (Distribuicao.PRINT)
+            solucao.print();
     }
 
     /**
@@ -90,11 +93,11 @@ public class ProgDinamica implements Distribuicao {
                         .filter(i2 -> this.rotas[i2] == rota).findFirst().getAsInt();
                 this.rotas = IntStream.concat(IntStream.of(this.rotas).limit(index),
                         IntStream.of(this.rotas).skip(index + 1)).toArray();
-            // Criar uma nova tabela de soluções
+                // Criar uma nova tabela de soluções
             }
             if (this.caminhoesDistribuidos.length - i - 1 != 0) {
                 int aceitavel = Arrays.stream(this.rotas).sum() / (this.caminhoesDistribuidos.length - i - 1);
-                this.T = new boolean[this.rotas.length + 1][(int) (aceitavel * 1.1) + 1];
+                this.T = new boolean[this.rotas.length + 1][aceitavel + 1];
             }
         }
         if (this.rotas.length != 0)
@@ -172,14 +175,10 @@ public class ProgDinamica implements Distribuicao {
     /**
      * Imprime a melhor distribuição de rotas e a rota total de cada caminhão
      */
-    public void print() {
-        System.out.println();
-        System.out.println("Quilometragem total:");
+    private void print() {
         for (int i = 0; i < this.caminhoesDistribuidos.length; i++) {
-            System.out.printf("Caminhão %d: ", i + 1);
-            for (int j = 0; j < this.caminhoesDistribuidos[i].size(); j++)
-                System.out.printf("%d ", this.caminhoesDistribuidos[i].get(j));
-            System.out.printf("%nTotal: %d km%n",
+            System.out.printf("Caminhão %d: rotas %s - total %dkm%n", i + 1,
+                    this.caminhoesDistribuidos[i].stream().map(Object::toString).collect(Collectors.joining(", ")),
                     this.caminhoesDistribuidos[i].stream().mapToInt(Integer::intValue).sum());
         }
     }
@@ -207,9 +206,15 @@ public class ProgDinamica implements Distribuicao {
         return menor;
     }
 
+    /**
+     * Método main de teste
+     * 
+     * @param args argumentos da linha de comandos
+     */
     public static void main(String[] args) {
-        int[] rotas = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9 };
-        int numCaminhoes = 3;
-        new ProgDinamica().distribuirRotas(rotas, numCaminhoes);
+        new ProgDinamica().distribuirRotas(new int[] { 40, 36, 38, 29, 32, 28, 31, 35, 31, 30, 32, 30, 29, 39, 35, 38,
+                39, 35, 32, 38, 32, 33, 29, 33, 29, 39, 28 }, 3);
+        new ProgDinamica().distribuirRotas(new int[] { 32, 51, 32, 43, 42, 30, 42, 51, 43, 51, 29, 25, 27, 32, 29, 55,
+                43, 29, 32, 44, 55, 29, 53, 30, 24, 27 }, 3);
     }
 }
