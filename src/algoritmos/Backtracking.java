@@ -45,6 +45,7 @@ public class Backtracking implements Distribuicao {
     private int[] melhorDistrb;
     /** Média das distâncias */
     private int media;
+    private boolean mediaExata;
 
     /**
      * Construtor da classe Backtracking
@@ -70,8 +71,11 @@ public class Backtracking implements Distribuicao {
         Arrays.fill(this.melhorDistrb, Integer.MAX_VALUE);
         int soma = Arrays.stream(rotas).sum();
         this.media = soma / this.caminhoes;
-        if (soma % this.caminhoes != 0) // caso não haja média exata
+        this.mediaExata = true;
+        if (soma % this.caminhoes != 0) {// caso não haja média exata
             this.media *= 1.1; // arrredonda em 10%
+            this.mediaExata = false;
+        }
     }
 
     @Override
@@ -96,6 +100,13 @@ public class Backtracking implements Distribuicao {
                 System.arraycopy(this.distbAtual, 0, this.melhorDistrb, 0, this.caminhoes);
                 this.melhorRotas = Arrays.stream(this.atualRotas).map(lista -> new ArrayList<>(lista))
                         .collect(Collectors.toList());
+                // pega o valor máximo de melhorDistrb
+                int max = Arrays.stream(this.melhorDistrb).max().getAsInt();
+                if (this.mediaExata && max == this.media) {
+                    this.print();
+                    System.exit(0);
+                }
+
             }
             return this; // De qualquer forma, retorna
         }
@@ -130,12 +141,11 @@ public class Backtracking implements Distribuicao {
      * @param args argumentos da linha de comandos
      */
     public static void main(String[] args) {
-        // new Backtracking().distribuirRotas(new int[] { 40, 36, 38, 29, 32, 28, 31,
-        // 35, 31, 30, 32, 30, 29, 39, 35, 38,
-        // 39, 35, 32, 38, 32, 33, 29, 33, 29, 39, 28 }, 3);
-        // new Backtracking().distribuirRotas(new int[] { 32, 51, 32, 43, 42, 30, 42,
-        // 51, 43, 51, 29, 25, 27, 32, 29, 55,
-        // 43, 29, 32, 44, 55, 29, 53, 30, 24, 27 }, 3); não é capaz de resolver
-        new Backtracking().distribuirRotas(new int[] { 35, 34, 33, 23, 21, 32, 35, 19, 26, 42 }, 3);
+        long inicio = System.nanoTime();
+        new Backtracking().distribuirRotas(new int[] { 40, 36, 38, 29, 32, 28, 31, 35, 31, 30, 32, 30, 29, 39, 35, 38,
+                39, 35, 32, 38, 32, 33, 29, 33, 29, 39, 28 }, 3);
+        new Backtracking().distribuirRotas(new int[] { 32, 51, 32, 43, 42, 30, 42, 51, 43, 51, 29, 25, 27, 32, 29, 55,
+                43, 29, 32, 44, 55, 29, 53, 30, 24, 27 }, 3);
+        System.out.printf("Tempo de execução: %fms%n", (System.nanoTime() - inicio) / 1e6);
     }
 }
