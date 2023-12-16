@@ -13,7 +13,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
  * Public License for more details.
  * 
- * You should have received a copy of the GNU
+ * You should have received a copy of the GNU Lesser
  * General Public License along with Best-route. If not, see
  * <https://www.gnu.org/licenses/>.
 */
@@ -70,7 +70,6 @@ public class App {
      * tempo de execução em milissegundos
      * 
      * @param rotas     Conjunto de rotas a serem distribuídas
-     * @param algoritmo Algoritmo a ser utilizado
      * @return Tempo de execução em milissegundos
      */
     private long tempoExecucao(int[] rotas) {

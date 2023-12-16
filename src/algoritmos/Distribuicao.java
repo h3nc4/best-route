@@ -13,7 +13,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
  * Public License for more details.
  * 
- * You should have received a copy of the GNU
+ * You should have received a copy of the GNU Lesser
  * General Public License along with Best-route. If not, see
  * <https://www.gnu.org/licenses/>.
 */
@@ -24,6 +24,7 @@ package algoritmos;
  * Interface que define o método de distribuição de rotas entre caminhões
  */
 public interface Distribuicao {
+    /** Variável que define se o algoritmo deve imprimir as rotas distribuídas */
     public static final boolean PRINT = false;
 
     /**

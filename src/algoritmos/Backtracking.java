@@ -13,7 +13,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
  * Public License for more details.
  * 
- * You should have received a copy of the GNU
+ * You should have received a copy of the GNU Lesser
  * General Public License along with Best-route. If not, see
  * <https://www.gnu.org/licenses/>.
 */
@@ -45,6 +45,7 @@ public class Backtracking implements Distribuicao {
     private int[] melhorDistrb;
     /** Média das distâncias */
     private int media;
+    /** Flag que indica se a média é exata */
     private boolean mediaExata;
 
     /**

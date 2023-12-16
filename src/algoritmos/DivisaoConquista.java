@@ -13,7 +13,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
  * Public License for more details.
  * 
- * You should have received a copy of the GNU
+ * You should have received a copy of the GNU Lesser
  * General Public License along with Best-route. If not, see
  * <https://www.gnu.org/licenses/>.
 */
@@ -95,8 +95,6 @@ public class DivisaoConquista implements Distribuicao {
      * rotas, adicionando-as ao array de caminhões distribuídos
      * 
      * Cria um novo array de rotas com as rotas que não foram distribuídas
-     * 
-     * @return A própria instância da classe
      */
     private void distribuir() {
         for (int i = 0; i < this.caminhoesDistribuidos.length; i++) {
@@ -160,9 +158,7 @@ public class DivisaoConquista implements Distribuicao {
     }
 
     /**
-     * Método que imprime a melhor distribuição de rotas
-     * 
-     * @param distribuicao distribuição atual das rotas
+     * Método que imprime a melhor distribuição de rotas encontrada
      */
     private void print() {
         for (int i = 0; i < this.caminhoesDistribuidos.length; i++) {
